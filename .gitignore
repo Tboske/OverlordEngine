@@ -30,3 +30,16 @@
 *.exe
 *.out
 *.app
+/OverlordEngine/_build
+/.vs/Overlord_x64
+/OverlordProject/Resources/SpriteFonts
+/OverlordProject/Resources/Textures
+/OverlordProject/Resources/Meshes/Sphere.ovm
+/OverlordProject/Resources/Meshes/SimpleLevel.ovpt
+/OverlordProject/Resources/Meshes/SimpleLevel.ovm
+/OverlordProject/Resources/Meshes/OctaSphere.ovm
+/OverlordProject/Resources/Meshes/Chair.ovpt
+/OverlordProject/Resources/Meshes/Chair.ovpc
+/OverlordProject/Resources/Meshes/Chair.ovm
+/_build
+/_intermediate
