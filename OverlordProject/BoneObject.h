@@ -19,9 +19,9 @@ protected:
 	virtual void Initialize(const SceneContext&) override;
 
 private:
-	float m_Length;
-	BaseMaterial* m_pMaterial;
+	float m_Length{};
+	BaseMaterial* m_pMaterial{};
 
-	XMFLOAT4X4 m_BindPose;
+	XMFLOAT4X4 m_BindPose{};
 };
 

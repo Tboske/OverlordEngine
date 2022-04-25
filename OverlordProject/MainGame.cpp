@@ -5,12 +5,12 @@
 //#define W3
 //#define W4
 //#define W5
-#define W6
+//#define W6
 //#define W7
 
 /*MILESTONE Content*/
 //#define MILESTONE_1
-//#define MILESTONE_2
+#define MILESTONE_2
 
 #pragma region Lab/Milestone Includes
 #ifdef W3
@@ -35,11 +35,11 @@
 #ifdef W6
 #include "Scenes/Week 6/SoftwareSkinningScene_1.h"
 #include "Scenes/Week 6/SoftwareSkinningScene_2.h"
-//#include "Scenes/Week 6/SoftwareSkinningScene_3.h"
+#include "Scenes/Week 6/SoftwareSkinningScene_3.h"
 #endif
 
 #ifdef W7
-//#include "Scenes/Week 7/HardwareSkinningScene.h"
+#include "Scenes/Week 7/HardwareSkinningScene.h"
 #endif
 
 #ifdef MILESTONE_1
@@ -92,7 +92,7 @@ void MainGame::Initialize()
 #ifdef W6
 	SceneManager::Get()->AddGameScene(new SoftwareSkinningScene_1());
 	SceneManager::Get()->AddGameScene(new SoftwareSkinningScene_2());
-	//SceneManager::Get()->AddGameScene(new SoftwareSkinningScene_3());
+	SceneManager::Get()->AddGameScene(new SoftwareSkinningScene_3());
 #endif
 
 #ifdef W7

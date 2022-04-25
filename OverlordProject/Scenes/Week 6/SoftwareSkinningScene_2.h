@@ -21,12 +21,13 @@ private:
 
 	float m_BoneRotation{};
 	int m_RotationSign{ 1 };
-	bool m_AutoRotate = false;
+	bool m_AutoRotate = true;
 
 	struct VertexSoftwareSkinned
 	{
 		VertexSoftwareSkinned(XMFLOAT3 pos, XMFLOAT3 norm, XMFLOAT4 color)
 			: transformedVertex{ pos, norm, color }
+			, originalVertex( pos, norm, color )
 		{}
 
 		VertexPosNormCol transformedVertex{};

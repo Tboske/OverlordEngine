@@ -1,9 +1,9 @@
 #pragma once
 
 //#define LAB_W4
-#define LAB_W5
+//#define LAB_W5
 //#define LAB_W6
-//#define LAB_W7
+#define LAB_W7
 
 #ifdef LAB_W4
 #define TODO_W4(msg) Logger::LogTodo(L"[LAB W4] " msg);

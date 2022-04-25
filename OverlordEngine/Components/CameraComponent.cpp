@@ -98,8 +98,8 @@ GameObject* CameraComponent::Pick(CollisionGroup ignoreGroups) const
 	if (physxProxy->Raycast(PhysxHelper::ToPxVec3(nP), dirVec, PX_MAX_F32, hit
 							, physx::PxHitFlag::eDEFAULT, filterData))
 	{
-		const auto& a = static_cast<BaseComponent*>(hit.getAnyHit(static_cast<physx::PxU32>(0)).actor->userData);
-		return a->GetGameObject();
+		const auto& go = static_cast<BaseComponent*>(hit.getAnyHit(static_cast<PxU32>(0)).actor->userData);
+		return go->GetGameObject();
 	}
 	return nullptr;
 }

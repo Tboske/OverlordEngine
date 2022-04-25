@@ -48,15 +48,28 @@ void SoftwareSkinningScene_2::Update()
 	m_pBone1->GetTransform()->Rotate(0, 0, -m_BoneRotation * 2.f);
 
 
-	m_pMeshDraw->RemoveTriangles();
-	for (size_t i{ 0 }; i > m_SkinnedVertices.size(); i += 4)
+	auto boneTransform0 = XMLoadFloat4x4(&m_pBone0->GetBindPose()) * XMLoadFloat4x4(&m_pBone0->GetTransform()->GetWorld());
+	auto boneTransform1 = XMLoadFloat4x4(&m_pBone1->GetBindPose()) * XMLoadFloat4x4(&m_pBone1->GetTransform()->GetWorld());
+	for (size_t i{ 0 }; i < m_SkinnedVertices.size(); ++i)
 	{
-		QuadPosNormCol qpsnc;
-		qpsnc.Vertex1 = m_SkinnedVertices[i].transformedVertex;
-		qpsnc.Vertex2 = m_SkinnedVertices[i + 1].transformedVertex;
-		qpsnc.Vertex3 = m_SkinnedVertices[i + 2].transformedVertex;
-		qpsnc.Vertex4 = m_SkinnedVertices[i + 3].transformedVertex;
-		m_pMeshDraw->AddQuad(qpsnc);
+		auto boneTransform = boneTransform0;
+		if (i >= 24)
+			boneTransform = boneTransform1;
+
+		auto vector = XMLoadFloat3(&m_SkinnedVertices[i].originalVertex.Position);
+		XMStoreFloat3(&m_SkinnedVertices[i].transformedVertex.Position ,XMVector3TransformCoord(vector, boneTransform));
+	}
+
+
+	m_pMeshDraw->RemoveTriangles();
+	for (size_t i{ 0 }; i < m_SkinnedVertices.size(); i += 4)
+	{
+		QuadPosNormCol quad;
+		quad.Vertex1 = m_SkinnedVertices[i].transformedVertex;
+		quad.Vertex2 = m_SkinnedVertices[i + 1].transformedVertex;
+		quad.Vertex3 = m_SkinnedVertices[i + 2].transformedVertex;
+		quad.Vertex4 = m_SkinnedVertices[i + 3].transformedVertex;
+		m_pMeshDraw->AddQuad(quad);
 	}
 	m_pMeshDraw->UpdateBuffer();
 }

@@ -154,22 +154,66 @@ MeshFilter* MeshFilterLoader::LoadContent(const ContentLoadInfo& loadInfo)
 			break;
 		case MeshDataType::BLENDINDICES:
 		{
-			TODO_W7(L"Add BLENDINDICES information");
+			pMesh->SetElement(ILSemantic::BLENDINDICES);
+
+			for (unsigned int i = 0; i < vertexCount; ++i)
+			{
+				XMFLOAT4 indices{};
+				indices.x = pReader->Read<float>();
+				indices.y = pReader->Read<float>();
+				indices.z = pReader->Read<float>();
+				indices.w = pReader->Read<float>();
+				pMesh->m_BlendIndices.emplace_back(indices);
+			}
 		}
 		break;
 		case MeshDataType::BLENDWEIGHTS:
 		{
-			TODO_W7(L"Add BLENDWEIGHTS information");
+			pMesh->SetElement(ILSemantic::BLENDWEIGHTS);
+
+			for (unsigned int i = 0; i < vertexCount; ++i)
+			{
+				XMFLOAT4 weights{};
+				weights.x = pReader->Read<float>();
+				weights.y = pReader->Read<float>();
+				weights.z = pReader->Read<float>();
+				weights.w = pReader->Read<float>();
+				pMesh->m_BlendWeights.emplace_back(weights);
+			}
 		}
 		break;
 		case MeshDataType::ANIMATIONCLIPS:
 		{
-			TODO_W7(L"Add ANIMATIONCLIPS information");
+			pMesh->m_HasAnimations = true;
+
+			int clipCount = pReader->Read<unsigned short>();
+			for (int i = 0; i < clipCount; ++i)
+			{
+				AnimationClip anim;
+				anim.name			= pReader->ReadString();
+				anim.duration		= pReader->Read<float>();
+				anim.ticksPerSecond = pReader->Read<float>();
+
+				int keyCount		= pReader->Read<unsigned short>();
+				for (int j = 0; j < keyCount; ++j)
+				{
+					AnimationKey animKey;
+					animKey.tick	= pReader->Read<float>();
+
+					int boneCount	= pReader->Read<unsigned short>();
+					for (int k = 0; k < boneCount; ++k)
+						animKey.boneTransforms.emplace_back(pReader->Read<XMFLOAT4X4>());
+
+					anim.keys.emplace_back(animKey);
+				}
+
+				pMesh->m_AnimationClips.emplace_back(anim);
+			}
 		}
 		break;
 		case MeshDataType::SKELETON:
 		{
-			TODO_W7(L"Add SKELETON information");
+			pMesh->m_BoneCount = pReader->Read<unsigned short>();
 		}
 		break;
 		default:
