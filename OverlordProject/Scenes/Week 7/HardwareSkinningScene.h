@@ -1,5 +1,5 @@
 #pragma once
-class HardwareSkinningScene : public GameScene
+class HardwareSkinningScene: public GameScene
 {
 public:
 	HardwareSkinningScene() : GameScene(L"HardwareSkinningScene") {}
