@@ -101,9 +101,11 @@
     <ClCompile Include="BoneObject.cpp" />
     <ClCompile Include="Materials\DiffuseMaterial.cpp" />
     <ClCompile Include="Materials\DiffuseMaterial_Skinned.cpp" />
+    <ClCompile Include="Materials\Project\BoxMaterial.cpp" />
     <ClCompile Include="Materials\SpikyMaterial.cpp" />
     <ClCompile Include="Materials\UberMaterial.cpp" />
     <ClCompile Include="Prefabs\Character.cpp" />
+    <ClCompile Include="Scenes\Project\ProjectScene.cpp" />
     <ClCompile Include="Scenes\Week 3\ComponentTestScene.cpp" />
     <ClCompile Include="Prefabs\CubePrefab.cpp" />
     <ClCompile Include="Prefabs\SpherePrefab.cpp" />
@@ -122,6 +124,7 @@
     <ClCompile Include="Scenes\Week 6\SoftwareSkinningScene_2.cpp" />
     <ClCompile Include="Scenes\Week 6\SoftwareSkinningScene_3.cpp" />
     <ClCompile Include="Scenes\Week 7\HardwareSkinningScene.cpp" />
+    <ClCompile Include="Scenes\Week 9\ParticleScene.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdafx.h</PrecompiledHeaderFile>
@@ -147,9 +150,11 @@
     <ClInclude Include="BoneObject.h" />
     <ClInclude Include="Materials\DiffuseMaterial.h" />
     <ClInclude Include="Materials\DiffuseMaterial_Skinned.h" />
+    <ClInclude Include="Materials\Project\BoxMaterial.h" />
     <ClInclude Include="Materials\SpikyMaterial.h" />
     <ClInclude Include="Materials\UberMaterial.h" />
     <ClInclude Include="Prefabs\Character.h" />
+    <ClInclude Include="Scenes\Project\ProjectScene.h" />
     <ClInclude Include="Scenes\Week 3\ComponentTestScene.h" />
     <ClInclude Include="Prefabs\CubePrefab.h" />
     <ClInclude Include="Prefabs\SpherePrefab.h" />
@@ -168,6 +173,7 @@
     <ClInclude Include="Scenes\Week 6\SoftwareSkinningScene_2.h" />
     <ClInclude Include="Scenes\Week 6\SoftwareSkinningScene_3.h" />
     <ClInclude Include="Scenes\Week 7\HardwareSkinningScene.h" />
+    <ClInclude Include="Scenes\Week 9\ParticleScene.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MainGame.h" />
   </ItemGroup>

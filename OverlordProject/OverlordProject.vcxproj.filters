@@ -28,6 +28,9 @@
     <ClCompile Include="Scenes\Week 6\SoftwareSkinningScene_3.cpp" />
     <ClCompile Include="Scenes\Week 7\HardwareSkinningScene.cpp" />
     <ClCompile Include="Materials\DiffuseMaterial_Skinned.cpp" />
+    <ClCompile Include="Scenes\Project\ProjectScene.cpp" />
+    <ClCompile Include="Materials\Project\BoxMaterial.cpp" />
+    <ClCompile Include="Scenes\Week 9\ParticleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -56,5 +59,8 @@
     <ClInclude Include="Scenes\Week 6\SoftwareSkinningScene_3.h" />
     <ClInclude Include="Scenes\Week 7\HardwareSkinningScene.h" />
     <ClInclude Include="Materials\DiffuseMaterial_Skinned.h" />
+    <ClInclude Include="Scenes\Project\ProjectScene.h" />
+    <ClInclude Include="Materials\Project\BoxMaterial.h" />
+    <ClInclude Include="Scenes\Week 9\ParticleScene.h" />
   </ItemGroup>
 </Project>

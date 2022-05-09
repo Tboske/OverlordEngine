@@ -16,6 +16,8 @@
 //#define MILESTONE_2
 //#define MILESTONE_3
 
+#define PROJECT
+
 #pragma region Lab/Milestone Includes
 #ifdef W3
 #include "Scenes/Week 3/MinionScene.h"
@@ -79,6 +81,10 @@
 #include "Scenes/Week 8/ShadowMappingScene.h"
 #include "Scenes/Week 9/ParticleScene.h"
 #include "Scenes/Week 10/PostProcessingScene.h"
+#endif
+
+#ifdef PROJECT
+#include "Scenes/Project/ProjectScene.h"
 #endif
 #pragma endregion
 
@@ -157,6 +163,10 @@ void MainGame::Initialize()
 	SceneManager::Get()->AddGameScene(new ShadowMappingScene());
 	SceneManager::Get()->AddGameScene(new ParticleScene());
 	SceneManager::Get()->AddGameScene(new PostProcessingScene());
+#endif
+
+#ifdef PROJECT
+	SceneManager::Get()->AddGameScene(new ProjectScene());
 #endif
 }
 
