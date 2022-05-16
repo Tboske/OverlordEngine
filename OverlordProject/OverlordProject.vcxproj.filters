@@ -31,6 +31,8 @@
     <ClCompile Include="Scenes\Project\ProjectScene.cpp" />
     <ClCompile Include="Materials\Project\BoxMaterial.cpp" />
     <ClCompile Include="Scenes\Week 9\ParticleScene.cpp" />
+    <ClCompile Include="Prefabs\Player.cpp" />
+    <ClCompile Include="Prefabs\Bomb.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -62,5 +64,7 @@
     <ClInclude Include="Scenes\Project\ProjectScene.h" />
     <ClInclude Include="Materials\Project\BoxMaterial.h" />
     <ClInclude Include="Scenes\Week 9\ParticleScene.h" />
+    <ClInclude Include="Prefabs\Player.h" />
+    <ClInclude Include="Prefabs\Bomb.h" />
   </ItemGroup>
 </Project>

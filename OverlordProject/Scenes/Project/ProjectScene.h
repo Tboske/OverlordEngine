@@ -1,9 +1,13 @@
 #pragma once
 
+class Player;
+class Character;
 class DiffuseMaterial_Skinned;
 class BoxMaterial;
 class DiffuseMaterial;
 class UberMaterial;
+
+
 
 class ProjectScene : public GameScene
 {
@@ -28,9 +32,7 @@ private:
 	BoxMaterial* m_pBoxMaterial = nullptr;
 	BoxMaterial* m_pBlockMaterial = nullptr;
 
-	GameObject* m_pPlayer = nullptr;
-	DiffuseMaterial_Skinned* m_pPlayerMaterial = nullptr;
-
+	Player* m_pPlayer = nullptr;
 
 	void InitArena(PxMaterial* );
 	void InitBox(PxMaterial* physxMat, float x, float z);

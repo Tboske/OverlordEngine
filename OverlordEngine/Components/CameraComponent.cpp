@@ -81,22 +81,22 @@ GameObject* CameraComponent::Pick(CollisionGroup ignoreGroups) const
 	const auto farPoint = XMVector3TransformCoord({ x,y,1.f, 0.f }, vp);
 
 	// make it a PxVec3
-	DirectX::XMFLOAT3 direction;
-	XMStoreFloat3(&direction, DirectX::XMVectorSubtract(farPoint, nearPoint));
-	physx::PxVec3 dirVec = PhysxHelper::ToPxVec3(direction);
+	XMFLOAT3 direction;
+	XMStoreFloat3(&direction, XMVectorSubtract(farPoint, nearPoint));
+	PxVec3 dirVec = PhysxHelper::ToPxVec3(direction);
 	dirVec.normalize();
 
-	DirectX::XMFLOAT3 nP;
+	XMFLOAT3 nP;
 	XMStoreFloat3(&nP, nearPoint);
 
 	// Raycast
-	physx::PxQueryFilterData filterData;
-	filterData.data.word0 = ~static_cast<physx::PxU32>(ignoreGroups);
+	PxQueryFilterData filterData;
+	filterData.data.word0 = ~static_cast<PxU32>(ignoreGroups);
 
-	physx::PxRaycastBuffer hit;
+	PxRaycastBuffer hit;
 	const auto& physxProxy = GetGameObject()->GetScene()->GetPhysxProxy();
 	if (physxProxy->Raycast(PhysxHelper::ToPxVec3(nP), dirVec, PX_MAX_F32, hit
-							, physx::PxHitFlag::eDEFAULT, filterData))
+							, PxHitFlag::eDEFAULT, filterData))
 	{
 		const auto& go = static_cast<BaseComponent*>(hit.getAnyHit(static_cast<PxU32>(0)).actor->userData);
 		return go->GetGameObject();

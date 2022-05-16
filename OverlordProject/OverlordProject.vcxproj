@@ -98,12 +98,14 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Prefabs\Bomb.cpp" />
     <ClCompile Include="BoneObject.cpp" />
     <ClCompile Include="Materials\DiffuseMaterial.cpp" />
     <ClCompile Include="Materials\DiffuseMaterial_Skinned.cpp" />
     <ClCompile Include="Materials\Project\BoxMaterial.cpp" />
     <ClCompile Include="Materials\SpikyMaterial.cpp" />
     <ClCompile Include="Materials\UberMaterial.cpp" />
+    <ClCompile Include="Prefabs\Player.cpp" />
     <ClCompile Include="Prefabs\Character.cpp" />
     <ClCompile Include="Scenes\Project\ProjectScene.cpp" />
     <ClCompile Include="Scenes\Week 3\ComponentTestScene.cpp" />
@@ -147,12 +149,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Prefabs\Bomb.h" />
     <ClInclude Include="BoneObject.h" />
     <ClInclude Include="Materials\DiffuseMaterial.h" />
     <ClInclude Include="Materials\DiffuseMaterial_Skinned.h" />
     <ClInclude Include="Materials\Project\BoxMaterial.h" />
     <ClInclude Include="Materials\SpikyMaterial.h" />
     <ClInclude Include="Materials\UberMaterial.h" />
+    <ClInclude Include="Prefabs\Player.h" />
     <ClInclude Include="Prefabs\Character.h" />
     <ClInclude Include="Scenes\Project\ProjectScene.h" />
     <ClInclude Include="Scenes\Week 3\ComponentTestScene.h" />
