@@ -19,6 +19,8 @@ public:
 	ProjectScene& operator=(const ProjectScene& other) = delete;
 	ProjectScene& operator=(ProjectScene&& other) noexcept = delete;
 
+	GameObject* GetArena() const { return m_pArena; }
+
 protected:
 	virtual void Initialize() override;
 	virtual void Update() override;
@@ -26,9 +28,9 @@ protected:
 	virtual void OnGUI() override;
 
 private:
-	GameObject* m_pFloor = nullptr;
-	UberMaterial* m_pFloorMaterial = nullptr;
+	GameObject* m_pArena = nullptr;
 	
+	UberMaterial* m_pFloorMaterial = nullptr;
 	BoxMaterial* m_pBoxMaterial = nullptr;
 	BoxMaterial* m_pBlockMaterial = nullptr;
 

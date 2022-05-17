@@ -62,24 +62,26 @@ void ProjectScene::InitArena(PxMaterial* physxMat)
 	m_pFloorMaterial->SetVariable_Scalar(L"gUseSpecularBlinn", false);
 	m_pFloorMaterial->SetVariable_Scalar(L"gFlipGreenChannel", true);
 
-	m_pFloor = AddChild(new GameObject());
+	m_pArena = AddChild(new GameObject());
+
+	auto pFloor = m_pArena->AddChild(new GameObject());
 	{
-		auto* pModelComp = m_pFloor->AddComponent(new ModelComponent(L"Meshes/Project/Floor.ovm"));
+		auto* pModelComp = pFloor->AddComponent(new ModelComponent(L"Meshes/Project/Floor.ovm"));
 		pModelComp->SetMaterial(m_pFloorMaterial);
 
-		auto* pRigid = m_pFloor->AddComponent(new RigidBodyComponent(true));
+		auto* pRigid = pFloor->AddComponent(new RigidBodyComponent(true));
 		pRigid->SetCollisionGroup(CollisionGroup::Group9);
 		auto* pConvex = ContentManager::Load<PxConvexMesh>(L"Meshes/Project/Floor.ovpc");
-		pRigid->AddCollider(PxConvexMeshGeometry(pConvex, PxMeshScale({10, 1, 10})), *physxMat);
+		pRigid->AddCollider(PxConvexMeshGeometry(pConvex), *physxMat);
 
-		//m_pFloor->GetTransform()->Scale(10, 1, 10);
+		pFloor->GetTransform()->Scale(10, 1, 10);
 	}
 
 	auto pBorderMat = MaterialManager::Get()->CreateMaterial<DiffuseMaterial>();
 	pBorderMat->SetDiffuseTexture(L"Textures/Project/Box_Diffuse.jpeg");
 
 #pragma region Borders
-	GameObject* pBorderLeft = m_pFloor->AddChild(new GameObject());
+	GameObject* pBorderLeft = m_pArena->AddChild(new GameObject());
 	{
 		auto* pModelComp = pBorderLeft->AddComponent(new ModelComponent(L"Meshes/Project/BorderVertical.ovm"));
 		pModelComp->SetMaterial(pBorderMat);
@@ -89,7 +91,7 @@ void ProjectScene::InitArena(PxMaterial* physxMat)
 		pRigid->AddCollider(PxConvexMeshGeometry(pConvex), *physxMat);
 	}
 
-	GameObject* pBorderRight = m_pFloor->AddChild(new GameObject());
+	GameObject* pBorderRight = m_pArena->AddChild(new GameObject());
 	{
 		auto* pModelComp = pBorderRight->AddComponent(new ModelComponent(L"Meshes/Project/BorderVertical.ovm"));
 		pModelComp->SetMaterial(pBorderMat);
@@ -101,7 +103,7 @@ void ProjectScene::InitArena(PxMaterial* physxMat)
 		pBorderRight->GetTransform()->Rotate(0, 180, 0);
 	}
 
-	GameObject* pBorderTop = m_pFloor->AddChild(new GameObject());
+	GameObject* pBorderTop = m_pArena->AddChild(new GameObject());
 	{
 		auto* pModelComp = pBorderTop->AddComponent(new ModelComponent(L"Meshes/Project/BorderHorizontal.ovm"));
 		pModelComp->SetMaterial(pBorderMat);
@@ -111,7 +113,7 @@ void ProjectScene::InitArena(PxMaterial* physxMat)
 		pRigid->AddCollider(PxConvexMeshGeometry(pConvex), *physxMat);
 	}
 
-	GameObject* pBorderBottom = m_pFloor->AddChild(new GameObject());
+	GameObject* pBorderBottom = m_pArena->AddChild(new GameObject());
 	{
 		auto* pModelComp = pBorderBottom->AddComponent(new ModelComponent(L"Meshes/Project/BorderHorizontal.ovm"));
 		pModelComp->SetMaterial(pBorderMat);
@@ -136,7 +138,7 @@ void ProjectScene::InitBox(PxMaterial* physxMat, float x, float z)
 	m_pBoxMaterial->SetDiffuseTexture(L"Textures/Project/Box_Diffuse.jpeg");
 	m_pBoxMaterial->SetNormalMap(L"Textures/Project/Box_Normal.png");
 
-	auto pBox = AddChild(new GameObject());
+	auto pBox = m_pArena->AddChild(new GameObject());
 	{
 		auto* pModelComp = pBox->AddComponent(new ModelComponent(L"Meshes/Project/Crate.ovm"));
 		pModelComp->SetMaterial(m_pBoxMaterial);
@@ -156,11 +158,10 @@ void ProjectScene::InitBlock(PxMaterial* physxMat, float x, float z)
 	m_pBlockMaterial->SetVariable_Scalar(L"gUseColor", true);
 	m_pBlockMaterial->SetNormalMap(L"Textures/Project/Box_Normal.png");
 
-	const auto pBlock = m_pFloor->AddChild(new GameObject());
+	const auto pBlock = m_pArena->AddChild(new GameObject());
 	{
 		auto* pModelComp = pBlock->AddComponent(new ModelComponent(L"Meshes/Project/Crate.ovm"));
 		pModelComp->SetMaterial(m_pBlockMaterial);
-
 		auto* pRigid = pBlock->AddComponent(new RigidBodyComponent(true));
 		pRigid->SetCollisionGroup(CollisionGroup::Group9);
 		auto* pConvex = ContentManager::Load<PxConvexMesh>(L"Meshes/Project/Crate.ovpc");

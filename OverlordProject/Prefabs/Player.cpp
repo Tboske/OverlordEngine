@@ -17,11 +17,10 @@ Player::Player()
 		m_pRigid->SetCollisionGroup(CollisionGroup::Group0);
 		m_pRigid->SetCollisionIgnoreGroups(CollisionGroup::Group1);
 
-
-
 		GetTransform()->Scale(0.02f);
 		GetTransform()->Translate(-20, 0, -15);
 	}
+
 }
 
 Player::~Player()
@@ -31,6 +30,9 @@ Player::~Player()
 
 void Player::Initialize(const SceneContext& sceneContext)
 {
+	m_pBomb = GetScene()->AddChild(new Bomb());
+
+
 	const auto pPlayerMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Skinned>();
 	pPlayerMaterial->SetDiffuseTexture(L"Textures/Project/Player_diffuse.png");
 
@@ -62,6 +64,7 @@ void Player::Draw(const SceneContext&)
 
 void Player::Update(const SceneContext& sceneContext)
 {
+
 	//## Input Gathering (move)
 	XMFLOAT3 move = XMFLOAT3(0, 0, 0);
 	float rot{};
@@ -106,7 +109,7 @@ void Player::Update(const SceneContext& sceneContext)
 	if (sceneContext.pInput->IsActionTriggered(DropBomb))
 	{
 		// we cannot make
-		if (!m_pBomb)
-			AddChild(new Bomb(this));
+		if (!m_pBomb->IsActive())
+			m_pBomb->Activate(GetTransform()->GetPosition());
 	}
 }
