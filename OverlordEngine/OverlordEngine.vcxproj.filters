@@ -54,6 +54,8 @@
     <ClCompile Include="Misc\ParticleMaterial.cpp" />
     <ClCompile Include="Misc\PostProcessingMaterial.cpp" />
     <ClCompile Include="Misc\ShadowMapMaterial.cpp" />
+    <ClCompile Include="Components\BombEffectComponent.cpp" />
+    <ClCompile Include="Misc\ExplosionMaterial.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -119,5 +121,7 @@
     <ClInclude Include="Misc\ParticleMaterial.h" />
     <ClInclude Include="Misc\PostProcessingMaterial.h" />
     <ClInclude Include="Misc\ShadowMapMaterial.h" />
+    <ClInclude Include="Components\BombEffectComponent.h" />
+    <ClInclude Include="Misc\ExplosionMaterial.h" />
   </ItemGroup>
 </Project>

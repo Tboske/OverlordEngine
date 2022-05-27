@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "MainGame.h"
 
+
 /*LAB Content*/
 //#define W3
 //#define W4
@@ -80,11 +81,13 @@
 #ifdef MILESTONE_3
 #include "Scenes/Week 8/ShadowMappingScene.h"
 #include "Scenes/Week 9/ParticleScene.h"
-#include "Scenes/Week 10/PostProcessingScene.h"
+//#include "Scenes/Week 10/PostProcessingScene.h"
 #endif
 
 #ifdef PROJECT
 #include "Scenes/Project/ProjectScene.h"
+#include "Scenes/Project/MainMenu.h"
+#include "Scenes/Project/InGameMenu.h"
 #endif
 #pragma endregion
 
@@ -162,10 +165,12 @@ void MainGame::Initialize()
 #ifdef MILESTONE_3
 	SceneManager::Get()->AddGameScene(new ShadowMappingScene());
 	SceneManager::Get()->AddGameScene(new ParticleScene());
-	SceneManager::Get()->AddGameScene(new PostProcessingScene());
+	//SceneManager::Get()->AddGameScene(new PostProcessingScene());
 #endif
 
 #ifdef PROJECT
+	SceneManager::Get()->AddGameScene(new MainMenu());
+	SceneManager::Get()->AddGameScene(new InGameMenu());
 	SceneManager::Get()->AddGameScene(new ProjectScene());
 #endif
 }

@@ -2,6 +2,7 @@
 #include "Bomb.h"
 
 #include "Player.h"
+#include "Components/BombEffectComponent.h"
 #include "Materials/DiffuseMaterial.h"
 #include "Scenes/Project/ProjectScene.h"
 
@@ -35,26 +36,52 @@ void Bomb::Activate(const XMFLOAT3& pos)
 	GetTransform()->Translate(pos);
 }
 
-GameObject* RaycastExplosion(PhysxProxy* pPhysxProx, const PxVec3& pos, const PxVec3& dir)
+// if the player is hit, the Gameobject pointer is filled with the player pointer
+GameObject* RaycastExplosion(PhysxProxy* pPhysxProx, const PxVec3& pos, const PxVec3& dir, PxRaycastHit& info, GameObject* pPlayer = nullptr)
 {
-	// make an extra variable to add an extra point for the shader
-
 	PxQueryFilterData filterData;
 	filterData.data.word0 = ~static_cast<PxU32>(CollisionGroup::Group1 | CollisionGroup::Group9);
 
 	PxRaycastBuffer hit;
-	if (pPhysxProx->Raycast(pos, dir, PX_MAX_F32, hit
-		, PxHitFlag::eDEFAULT, filterData))
+	if (pPhysxProx->Raycast(pos, dir, 200.f, hit, PxHitFlag::eDEFAULT, filterData))
 	{
-		const auto& go = static_cast<BaseComponent*>(hit.getAnyHit(static_cast<PxU32>(0)).actor->userData)->GetGameObject();
+		for (PxU32 i = 0; i < hit.getNbAnyHits(); ++i)
+		{
+			info = hit.getAnyHit(i);
+			auto go = static_cast<BaseComponent*>(info.actor->userData)->GetGameObject();
 
-		if (go->GetTag() != L"Bomb")
-			return go;
+			if (go->GetTag() == L"Player")
+				pPlayer = go;
 
-		const auto& go2 = static_cast<BaseComponent*>(hit.getAnyHit(static_cast<PxU32>(1)).actor->userData)->GetGameObject();
-		return go2;
+			if (go->GetTag() == L"Box")
+				return go;
+		}
+
+		// no box was hit, return first hit then
+		info = hit.getAnyHit(1);
 	}
 	return nullptr;
+}
+
+void AddVertices(std::vector<ExplosionVertex>& vertices, const XMFLOAT3& origin, const XMFLOAT3& hitPos)
+{
+	auto vOrigin = XMLoadFloat3(&origin);
+	auto vHitPos = XMLoadFloat3(&hitPos);
+
+	// calc distance
+	auto dist = vOrigin - vHitPos;
+	dist = XMVector3Length(dist);
+	XMFLOAT3 deltaDist{};
+	XMStoreFloat3(&deltaDist, dist);
+
+	const float nrVertices = deltaDist.x;
+	for (float i = 0; i <= nrVertices; i += 1.f)
+	{
+		ExplosionVertex& vert = vertices.emplace_back();
+		float d = i / nrVertices;
+		auto pos = XMVectorLerp(vOrigin, vHitPos, d);
+		XMStoreFloat3(&vert.Position, pos);
+	}
 }
 
 
@@ -62,36 +89,81 @@ void Bomb::Update(const SceneContext& sc)
 {
 	if (!m_IsActive)
 		return;
+	
 
 	auto dTime = sc.pGameTime->GetElapsed();
-
 	m_LiveTime += dTime;
+
+	auto pos = GetTransform()->GetWorldPosition();
+	pos.y += 1.5f;
+
+	auto end = pos;
+	end.z += 25.f;
+	DebugRenderer::DrawLine(pos, end);
+
+	end = pos;
+	end.z -= 25.f;
+	DebugRenderer::DrawLine(pos, end);
+
+	end = pos;
+	end.x += 25.f;
+	DebugRenderer::DrawLine(pos, end);
+
+	end = pos;
+	end.x -= 25.f;
+	DebugRenderer::DrawLine(pos, end);
+
 
 	if (m_LiveTime > m_Duration)
 	{
-		auto pos = GetTransform()->GetWorldPosition();
-		pos.y += 0.5f;
+		if (m_Exploded)
+		{
+			if (m_pBombEffect->IsActive())
+			{
+				// cleanup bomb
+				m_IsActive = false;
+				m_Exploded = false;
+				// put the bomb out of the arena, to make it invisible
+				GetTransform()->Translate(0, -10, 0);
+			}
+		}
+		else
+		{
+			std::vector<ExplosionVertex> bombExplosion;
 
-		// cast rays in 4 directions
-		const auto& physxProxy = GetScene()->GetPhysxProxy();
-		auto* scene = static_cast<ProjectScene*>(GetScene());
-		// north
-		if (auto go = RaycastExplosion(physxProxy, PhysxHelper::ToPxVec3(pos), { 0,0,1 }))
-			scene->GetArena()->RemoveChild(go, true);
-		// east
-		if (auto go = RaycastExplosion(physxProxy, PhysxHelper::ToPxVec3(pos), { 1,0,0 }))
-			scene->GetArena()->RemoveChild(go, true);
-		// south
-		if (auto go = RaycastExplosion(physxProxy, PhysxHelper::ToPxVec3(pos), { 0,0,-1 }))
-			scene->GetArena()->RemoveChild(go, true);
-		// west
-		if (auto go = RaycastExplosion(physxProxy, PhysxHelper::ToPxVec3(pos), { -1,0,0 }))
-			scene->GetArena()->RemoveChild(go, true);
+			// cast rays in 4 directions
+			const auto& physxProxy = GetScene()->GetPhysxProxy();
+			auto* scene = static_cast<ProjectScene*>(GetScene());
+			PxRaycastHit hitInfo;
+			// north
+			if (auto go = RaycastExplosion(physxProxy, PhysxHelper::ToPxVec3(pos), { 0,0,1 }, hitInfo))
+				scene->GetArena()->RemoveChild(go, true);
+			AddVertices(bombExplosion, pos, MathHelper::ToXMFloat3(hitInfo.position));
 
-		// cleanup bomb
-		m_IsActive = false;
-		// put the bomb out of the arena, to make it invisible
-		GetTransform()->Translate(0, -10, 0);
+			// east
+			if (auto go = RaycastExplosion(physxProxy, PhysxHelper::ToPxVec3(pos), { 1,0,0 }, hitInfo))
+				scene->GetArena()->RemoveChild(go, true);
+			AddVertices(bombExplosion, pos, MathHelper::ToXMFloat3(hitInfo.position));
+
+			// south
+			if (auto go = RaycastExplosion(physxProxy, PhysxHelper::ToPxVec3(pos), { 0,0,-1 }, hitInfo))
+				scene->GetArena()->RemoveChild(go, true);
+			AddVertices(bombExplosion, pos, MathHelper::ToXMFloat3(hitInfo.position));
+
+			// west
+			if (auto go = RaycastExplosion(physxProxy, PhysxHelper::ToPxVec3(pos), { -1,0,0 }, hitInfo))
+				scene->GetArena()->RemoveChild(go, true);
+			AddVertices(bombExplosion, pos, MathHelper::ToXMFloat3(hitInfo.position));
+
+			m_pBombEffect->ActivateEffect(bombExplosion);
+			m_Exploded = true;
+		}
 	}
+}
+
+void Bomb::Initialize(const SceneContext&)
+{
+	m_pBombEffect = AddComponent(new BombEffectComponent(L"Textures/FireBall.png"));
+
 }
 

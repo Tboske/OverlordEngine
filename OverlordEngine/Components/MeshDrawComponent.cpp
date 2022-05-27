@@ -99,7 +99,7 @@ void MeshDrawComponent::Draw(const SceneContext& sceneContext)
 	auto wvp = world * viewProjection;
 	m_pWvpVar->SetMatrix(reinterpret_cast<float*>(&wvp));
 
-	d3d11.pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	d3d11.pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	d3d11.pDeviceContext->IASetInputLayout(m_pInputLayout);
 
 	constexpr UINT offset = 0;

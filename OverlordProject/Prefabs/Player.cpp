@@ -19,6 +19,7 @@ Player::Player()
 
 		GetTransform()->Scale(0.02f);
 		GetTransform()->Translate(-20, 0, -15);
+		SetTag(L"Player");
 	}
 
 }

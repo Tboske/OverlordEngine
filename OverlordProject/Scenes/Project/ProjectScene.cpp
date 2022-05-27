@@ -17,6 +17,7 @@ ProjectScene::~ProjectScene()
 void ProjectScene::Initialize()
 {
 	m_SceneContext.settings.enableOnGUI = true;
+	m_SceneContext.settings.drawUserDebug = true;
 #ifndef _DEBUG
 	if (DebugRenderer::IsEnabled())
 		DebugRenderer::ToggleDebugRenderer();
@@ -25,18 +26,50 @@ void ProjectScene::Initialize()
 
 	const auto pPhysxMaterial = PxGetPhysics().createMaterial(0.5f, 0.5f, 0.0f);
 
+
+	m_pCamera = AddChild(new FixedCamera());
+	m_pCamera->GetTransform()->Translate(0, 45, 0);
+	m_pCamera->GetTransform()->Rotate(90, 0, 0);
+	SetActiveCamera(m_pCamera->GetComponent<CameraComponent>());
+
 	InitArena(pPhysxMaterial);
-	InitBox(pPhysxMaterial, 0, 0);
-	InitBox(pPhysxMaterial, -2.5, 0);
-	InitBox(pPhysxMaterial, 0, -2.5);
-	InitBox(pPhysxMaterial, -7.5, -2.5);
+
+#pragma region boxes
+	for (int y = -6; y <= 6; ++y)
+	{
+		for (int x = -8; x <= 8; ++x)
+		{
+			if (x <= -7 && y <= -5)
+				continue;
+			if (x >= 7  && y >= 5 )
+				continue;
+			if (x <= -7 && y >= 5 )
+				continue;
+			if (x >= 7  && y <= -5)
+				continue;
+
+			InitBox(pPhysxMaterial, float(x) * 2.5f, float(y) * 2.5f);
+
+			if (y % 2 != 0)
+				++x;
+		}
+	}
+
+#pragma endregion
+
+	// some ugly hardcoded shenanigans
+	for (float x = -17.5f; x <= 17.5f; x += 5.f)
+		for (float y = -12.5; y <= 12.5f; y += 5.f)
+			InitBlock(pPhysxMaterial, x, y);
+
 
 	m_pPlayer = AddChild(new Player());
 }
 
 void ProjectScene::Update()
 {
-
+	if (m_SceneContext.pInput->IsKeyboardKey(InputState::released, VK_ESCAPE))
+		SceneManager::Get()->SetActiveGameScene(L"InGameMenu");
 }
 
 void ProjectScene::Draw()
@@ -77,10 +110,10 @@ void ProjectScene::InitArena(PxMaterial* physxMat)
 		pFloor->GetTransform()->Scale(10, 1, 10);
 	}
 
-	auto pBorderMat = MaterialManager::Get()->CreateMaterial<DiffuseMaterial>();
-	pBorderMat->SetDiffuseTexture(L"Textures/Project/Box_Diffuse.jpeg");
-
 #pragma region Borders
+	auto pBorderMat = MaterialManager::Get()->CreateMaterial<DiffuseMaterial>();
+	pBorderMat->SetDiffuseTexture(L"Textures/Project/Rock1.jpg");
+
 	GameObject* pBorderLeft = m_pArena->AddChild(new GameObject());
 	{
 		auto* pModelComp = pBorderLeft->AddComponent(new ModelComponent(L"Meshes/Project/BorderVertical.ovm"));
@@ -126,10 +159,39 @@ void ProjectScene::InitArena(PxMaterial* physxMat)
 	}
 #pragma endregion
 
-	// some ugly hardcoded shenanigans
-	for (float x = -17.5f; x <= 17.5f; x += 5.f)
-		for (float y = -12.5; y <= 12.5f; y += 5.f)
-			InitBlock(physxMat, x, y);
+
+#pragma region Rocks
+	auto pRockMat = MaterialManager::Get()->CreateMaterial<DiffuseMaterial>();
+	pRockMat->SetDiffuseTexture(L"Textures/Project/Rock1.jpg");
+
+	// bigger rocks
+	InitRock(pRockMat, -31.f, -10.f, 15.f);
+	InitRock(pRockMat, -28.f,  10.f, 14.f, 90);
+	InitRock(pRockMat, -30.f,  1.f , 12.f, 90);
+	InitRock(pRockMat,  30.f, -10.f, 15.f, 40);
+	InitRock(pRockMat,  27.f,  -2.f, 11.f, 260);
+	InitRock(pRockMat,  32.f,  10.f, 15.f, 170);
+
+	// smaller rocks
+	InitRock(pRockMat, 28.f, 19.f, 7.f, 260);
+	InitRock(pRockMat, 25.f, 16.f, 5.f, 140);
+	InitRock(pRockMat, 25.f, 11.f, 7.f, 160);
+	InitRock(pRockMat, 26.f, 5.5f, 8.f, 80);
+	InitRock(pRockMat, 24.5f,  2.f, 5.f, 40);
+	InitRock(pRockMat, 25.f, -5.f, 7.f, 220);
+	InitRock(pRockMat, 25.5f, -14.5f, 7.f, 20);
+	
+	InitRock(pRockMat, -25.f, 16.f, 5.f, 140);
+	InitRock(pRockMat, -25.f, 11.f, 7.f, 160);
+	InitRock(pRockMat, -26.f, 5.5f, 8.f, 80);
+	InitRock(pRockMat, -24.f, 2.f, 5.f, 40);
+	InitRock(pRockMat, -24.f, 0.f, 4.f, 10);
+	InitRock(pRockMat, -25.5f, -3.f, 7.f, 220);
+	InitRock(pRockMat, -26.f, -6.5f, 8.f, 110);
+	InitRock(pRockMat, -27.5f, -9.f, 10.f, 210);
+	InitRock(pRockMat, -26.5f, -14.f, 7.f, 260);
+	InitRock(pRockMat, -24.5f, -19.f, 4.f, 60);
+#pragma endregion
 }
 
 void ProjectScene::InitBox(PxMaterial* physxMat, float x, float z)
@@ -145,8 +207,9 @@ void ProjectScene::InitBox(PxMaterial* physxMat, float x, float z)
 
 		auto* pRigid = pBox->AddComponent(new RigidBodyComponent(true));
 		auto* pConvex = ContentManager::Load<PxConvexMesh>(L"Meshes/Project/Crate.ovpc");
-		pRigid->AddCollider(PxConvexMeshGeometry(pConvex), *physxMat);
+		pRigid->AddCollider(PxConvexMeshGeometry(pConvex, PxMeshScale(1.2f)), *physxMat);
 
+		pBox->SetTag(L"Box");
 		pBox->GetTransform()->Translate(x, 1.25, z);
 	}
 }
@@ -163,7 +226,6 @@ void ProjectScene::InitBlock(PxMaterial* physxMat, float x, float z)
 		auto* pModelComp = pBlock->AddComponent(new ModelComponent(L"Meshes/Project/Crate.ovm"));
 		pModelComp->SetMaterial(m_pBlockMaterial);
 		auto* pRigid = pBlock->AddComponent(new RigidBodyComponent(true));
-		pRigid->SetCollisionGroup(CollisionGroup::Group9);
 		auto* pConvex = ContentManager::Load<PxConvexMesh>(L"Meshes/Project/Crate.ovpc");
 		pRigid->AddCollider(PxConvexMeshGeometry(pConvex), *physxMat);
 		
@@ -171,3 +233,17 @@ void ProjectScene::InitBlock(PxMaterial* physxMat, float x, float z)
 		pBlock->GetTransform()->Scale(1.2f, 1.2f, 1.2f);
 	}
 }
+
+void ProjectScene::InitRock(DiffuseMaterial* pRockMat, float x, float z, float scale, float rot)
+{
+	auto pRock = m_pArena->AddChild(new GameObject());
+	{
+		auto* pModel = pRock->AddComponent(new ModelComponent(L"Meshes/Project/Rock.ovm"));
+		pModel->SetMaterial(pRockMat);
+
+		pRock->GetTransform()->Translate(x, scale/2, z);
+		pRock->GetTransform()->Scale(scale);
+		pRock->GetTransform()->Rotate(0, rot, 0);
+	}
+}
+

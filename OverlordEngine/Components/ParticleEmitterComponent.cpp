@@ -28,7 +28,7 @@ void ParticleEmitterComponent::Initialize(const SceneContext& sceneContext)
 
 	CreateVertexBuffer(sceneContext);
 
-	m_pParticleTexture = ContentManager::Load<TextureData>(L"Textures/Smoke.png");
+	m_pParticleTexture = ContentManager::Load<TextureData>(m_AssetFile);
 }
 
 void ParticleEmitterComponent::CreateVertexBuffer(const SceneContext& sceneContext)

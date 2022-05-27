@@ -52,4 +52,9 @@ namespace MathHelper
 		if (value < lo)
 			value = lo;
 	}
+
+	inline XMFLOAT3 ToXMFloat3(PxVec3 vec3)
+	{
+		return XMFLOAT3(vec3.x, vec3.y, vec3.z);
+	}
 }

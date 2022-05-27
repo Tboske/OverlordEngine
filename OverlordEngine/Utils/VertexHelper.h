@@ -130,3 +130,9 @@ struct VertexParticle
 	float Size{5.f};
 	float Rotation{0.f};
 };
+
+//Particle Rendering
+struct ExplosionVertex
+{
+	XMFLOAT3 Position{};
+};

@@ -35,10 +35,12 @@ private:
 	BoxMaterial* m_pBlockMaterial = nullptr;
 
 	Player* m_pPlayer = nullptr;
+	FixedCamera* m_pCamera = nullptr;
 
 	void InitArena(PxMaterial* );
 	void InitBox(PxMaterial* physxMat, float x, float z);
 
 	void InitBlock(PxMaterial* physxMat, float x, float z);
+	void InitRock(DiffuseMaterial* pRockMat, float x, float z, float scale, float rot = 0);
 };
 
