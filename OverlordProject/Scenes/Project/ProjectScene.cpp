@@ -63,7 +63,19 @@ void ProjectScene::Initialize()
 			InitBlock(pPhysxMaterial, x, y);
 
 
-	m_pPlayer = AddChild(new Player());
+	m_pPlayer1 = AddChild(new Player(0, -20, -15));
+	m_pPlayer1->AddInput(m_SceneContext, Player::MoveForward	, 'W');
+	m_pPlayer1->AddInput(m_SceneContext, Player::MoveBackward	, 'S');
+	m_pPlayer1->AddInput(m_SceneContext, Player::MoveLeft		, 'A');
+	m_pPlayer1->AddInput(m_SceneContext, Player::MoveRight		, 'D');
+	m_pPlayer1->AddInput(m_SceneContext, Player::DropBomb		, VK_SPACE);
+
+	m_pPlayer2 = AddChild(new Player(1, 20, 15));
+	m_pPlayer2->AddInput(m_SceneContext, Player::MoveForward	, VK_UP);
+	m_pPlayer2->AddInput(m_SceneContext, Player::MoveBackward	, VK_DOWN);
+	m_pPlayer2->AddInput(m_SceneContext, Player::MoveLeft		, VK_LEFT);
+	m_pPlayer2->AddInput(m_SceneContext, Player::MoveRight		, VK_RIGHT);
+	m_pPlayer2->AddInput(m_SceneContext, Player::DropBomb		, VK_NUMPAD0);
 }
 
 void ProjectScene::Update()

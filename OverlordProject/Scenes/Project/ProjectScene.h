@@ -34,7 +34,8 @@ private:
 	BoxMaterial* m_pBoxMaterial = nullptr;
 	BoxMaterial* m_pBlockMaterial = nullptr;
 
-	Player* m_pPlayer = nullptr;
+	Player* m_pPlayer1 = nullptr;
+	Player* m_pPlayer2 = nullptr;
 	FixedCamera* m_pCamera = nullptr;
 
 	void InitArena(PxMaterial* );
