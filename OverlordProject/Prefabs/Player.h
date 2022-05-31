@@ -1,5 +1,6 @@
 #pragma once
 
+class Score;
 class Bomb;
 
 class Player final : public GameObject
@@ -30,6 +31,10 @@ private:
 	RigidBodyComponent* m_pRigid = nullptr;
 	ModelAnimator* m_pAnimator{};
 	float m_MoveSpeed = 0.1f;
-	int m_player;
+	int m_player = 0;
+
+	Score* m_pScore = nullptr;
+
+	XMFLOAT3 m_Color = { 1.f, 0.f, 0.f };
 };
 

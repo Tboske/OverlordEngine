@@ -135,4 +135,5 @@ struct VertexParticle
 struct ExplosionVertex
 {
 	XMFLOAT3 Position{};
+	float Size{ 0.f };
 };

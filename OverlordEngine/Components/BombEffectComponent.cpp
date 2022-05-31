@@ -26,7 +26,6 @@ void BombEffectComponent::ActivateEffect(const std::vector<ExplosionVertex>& pos
 	UpdateBuffer();
 
 	m_ElapsedVal = 0;
-	m_pMaterial->SetVariable_Scalar(L"gSize", 0);
 
 	m_IsActive = true;
 }
@@ -64,9 +63,13 @@ void BombEffectComponent::Update(const SceneContext& sceneContext)
 		m_ElapsedVal = 0;
 		m_IsActive = false;
 	}
-	
-	m_pMaterial->SetVariable_Scalar(L"gSize"
-		, ExplosionEquation(m_ElapsedVal, m_ExplosionSettings));
+
+	const float size = ExplosionEquation(m_ElapsedVal, m_ExplosionSettings);
+
+	for (auto& explosion : m_pExplosionArray)
+		explosion.Size = size;
+
+	UpdateBuffer();
 }
 
 void BombEffectComponent::Draw(const SceneContext& sceneContext)
@@ -123,9 +126,8 @@ void BombEffectComponent::UpdateBuffer() const
 
 	const auto d3d11 = scene->GetSceneContext().d3dContext;
 
-	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	d3d11.pDeviceContext->Map(m_pVertexBuffer, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &mappedResource);
+	D3D11_MAPPED_SUBRESOURCE mappedResource; 
+	d3d11.pDeviceContext->Map(m_pVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	memcpy(mappedResource.pData, m_pExplosionArray.data(), sizeof(ExplosionVertex) * m_pExplosionArray.capacity());
 	d3d11.pDeviceContext->Unmap(m_pVertexBuffer, 0);
-
 }

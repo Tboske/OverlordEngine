@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Player.h"
-#include "Player.h"
 
+#include "Score.h"
 #include "Bomb.h"
 #include "Materials/DiffuseMaterial_Skinned.h"
 
@@ -24,6 +24,22 @@ Player::Player(int player, float x, float z)
 		SetTag(L"Player");
 	}
 
+
+	switch (player)
+	{
+	case 0:
+		m_Color = { 1.f,0.f,0.f };
+		break;
+	case 1:
+		m_Color = { 0.f,1.f,0.f };
+		break;
+	case 2:
+		m_Color = { 0.f,0.f,1.f };
+		break;
+	case 3:
+		m_Color = { 1.f,1.f,0.f };
+		break;
+	}
 }
 
 Player::~Player()
@@ -47,16 +63,24 @@ void Player::AddInput(const SceneContext& sc, InputIds input, UINT virtualKey)
 
 void Player::Initialize(const SceneContext&)
 {
-	m_pBomb = GetScene()->AddChild(new Bomb());
+	m_pBomb = GetScene()->AddChild(new Bomb(this));
 
 
 	const auto pPlayerMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Skinned>();
 	pPlayerMaterial->SetDiffuseTexture(L"Textures/Project/Player_diffuse.png");
+	pPlayerMaterial->SetVariable_Scalar(L"gUseColor", true);
+	pPlayerMaterial->SetVariable_Vector(L"gPlayerColor", m_Color);
+
 
 	const auto pModel = AddComponent(new ModelComponent(L"Meshes/Project/Player.ovm"));
 	pModel->SetMaterial(pPlayerMaterial);
 	m_pAnimator = pModel->GetAnimator();
 	m_pAnimator->Play();
+
+
+
+	m_pScore = AddChild(new Score());
+	m_pScore->SetColor(m_Color);
 }
 
 void Player::Draw(const SceneContext&)
@@ -108,7 +132,7 @@ void Player::Update(const SceneContext& sceneContext)
 	}
 
 	// bomb
-	if (sceneContext.pInput->IsActionTriggered(DropBomb))
+	if (sceneContext.pInput->IsActionTriggered(UniqueInputID(m_player, DropBomb)))
 	{
 		// we cannot make
 		if (!m_pBomb->IsActive())

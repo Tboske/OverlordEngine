@@ -1,8 +1,6 @@
 float4x4 gWorldViewProj : WORLD;
 float4x4 gWorld;
 
-float gSize;
-
 Texture2D gTexture;
 
 //STATES
@@ -43,6 +41,7 @@ RasterizerState BackCulling
 struct VS_DATA
 {
     float3 Position : POSITION;
+    float Size : TEXCOORD0;
 };
 
 struct GS_DATA
@@ -81,10 +80,10 @@ void MainGS(point VS_DATA vertex[1], inout TriangleStream<GS_DATA> triStream)
     float3 topLeft, topRight, bottomLeft, bottomRight;
     const float3 origin = vertex[0].Position;
     
-    topLeft     = float3(origin.x   - gSize , origin.y , origin.z   - gSize );
-    topRight    = float3(origin.x   + gSize , origin.y , origin.z   - gSize );
-    bottomLeft  = float3(origin.x   - gSize , origin.y , origin.z   + gSize );
-    bottomRight = float3(origin.x   + gSize , origin.y , origin.z   + gSize );    
+    topLeft     = float3(origin.x   - vertex[0].Size , origin.y , origin.z   - vertex[0].Size );
+    topRight    = float3(origin.x   + vertex[0].Size , origin.y , origin.z   - vertex[0].Size );
+    bottomLeft  = float3(origin.x   - vertex[0].Size , origin.y , origin.z   + vertex[0].Size );
+    bottomRight = float3(origin.x   + vertex[0].Size , origin.y , origin.z   + vertex[0].Size );    
 
     
     

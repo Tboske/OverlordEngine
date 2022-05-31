@@ -6,7 +6,7 @@ public:
 	Button(float x
 		, float y
 		, const std::wstring& text = L"Button"
-		, DirectX::XMFLOAT4 color = { 1,1,1,1 }
+		, XMFLOAT4 color = { 1,1,1,1 }
 		, float layer = 0
 		, float width = 10
 		, float height = 5

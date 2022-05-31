@@ -2,7 +2,6 @@
 
 class Player;
 class Character;
-class DiffuseMaterial_Skinned;
 class BoxMaterial;
 class DiffuseMaterial;
 class UberMaterial;
@@ -36,6 +35,7 @@ private:
 
 	Player* m_pPlayer1 = nullptr;
 	Player* m_pPlayer2 = nullptr;
+
 	FixedCamera* m_pCamera = nullptr;
 
 	void InitArena(PxMaterial* );

@@ -39,6 +39,7 @@
     <ClCompile Include="Scenes\Project\MainMenu.cpp" />
     <ClCompile Include="Prefabs\Button.cpp" />
     <ClCompile Include="Scenes\Project\InGameMenu.cpp" />
+    <ClCompile Include="Prefabs\Score.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -78,5 +79,6 @@
     <ClInclude Include="Scenes\Project\MainMenu.h" />
     <ClInclude Include="Prefabs\Button.h" />
     <ClInclude Include="Scenes\Project\InGameMenu.h" />
+    <ClInclude Include="Prefabs\Score.h" />
   </ItemGroup>
 </Project>

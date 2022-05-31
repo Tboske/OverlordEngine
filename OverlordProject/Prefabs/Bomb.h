@@ -6,10 +6,10 @@ class Player;
 class Bomb final : public GameObject
 {
 public:
-	Bomb();
+	Bomb(Player* pPlayer);
 	virtual ~Bomb() override = default;
 
-	bool IsActive() { return m_IsActive; }
+	bool IsActive() const { return m_IsActive; }
 	void Activate(const XMFLOAT3& pos);
 
 protected:
@@ -24,5 +24,7 @@ private:
 
 	float m_LiveTime = 0.f;
 	float m_Duration = 4.f;
+
+	Player* m_pPlayer = nullptr;
 };
 

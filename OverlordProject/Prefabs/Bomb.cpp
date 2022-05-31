@@ -7,7 +7,8 @@
 #include "Scenes/Project/ProjectScene.h"
 
 
-Bomb::Bomb()
+Bomb::Bomb(Player* pPlayer)
+	: m_pPlayer{ pPlayer }
 {
 	const auto pBombMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial>();
 	pBombMaterial->SetDiffuseTexture(L"Textures/Project/Bomb.png");
@@ -23,7 +24,7 @@ Bomb::Bomb()
 	const auto pModel = AddComponent(new ModelComponent(L"Meshes/Project/Bomb.ovm"));
 	pModel->SetMaterial(pBombMaterial);
 	
-	GetTransform()->Scale(0.02f);
+	GetTransform()->Scale(0.02f);	
 	SetTag(L"Bomb");
 	// put the bomb out of the arena, to make it invisible
 	GetTransform()->Translate(0, -10, 0);
@@ -78,9 +79,12 @@ void AddVertices(std::vector<ExplosionVertex>& vertices, const XMFLOAT3& origin,
 	for (float i = 0; i <= nrVertices; i += 1.f)
 	{
 		ExplosionVertex& vert = vertices.emplace_back();
+
 		float d = i / nrVertices;
 		auto pos = XMVectorLerp(vOrigin, vHitPos, d);
 		XMStoreFloat3(&vert.Position, pos);
+
+		vert.Size = 0.f;
 	}
 }
 
@@ -97,6 +101,7 @@ void Bomb::Update(const SceneContext& sc)
 	auto pos = GetTransform()->GetWorldPosition();
 	pos.y += 1.5f;
 
+#if _DEBUG
 	auto end = pos;
 	end.z += 25.f;
 	DebugRenderer::DrawLine(pos, end);
@@ -112,6 +117,8 @@ void Bomb::Update(const SceneContext& sc)
 	end = pos;
 	end.x -= 25.f;
 	DebugRenderer::DrawLine(pos, end);
+#endif
+
 
 
 	if (m_LiveTime > m_Duration)

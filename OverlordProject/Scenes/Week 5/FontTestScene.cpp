@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "FontTestScene.h"
 
+
 void FontTestScene::Initialize()
 {
 	m_SceneContext.settings.enableOnGUI = true;

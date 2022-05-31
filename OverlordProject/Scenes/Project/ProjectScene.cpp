@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "ProjectScene.h"
 
+
 #include "Prefabs/Player.h"
+
 #include "Materials/DiffuseMaterial.h"
-#include "Materials/DiffuseMaterial_Skinned.h"
 #include "Materials/UberMaterial.h"
 #include "Materials/Project/BoxMaterial.h"
-#include "Prefabs/Character.h"
 
 ProjectScene::~ProjectScene()
 {

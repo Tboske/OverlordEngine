@@ -1,6 +1,8 @@
 float4x4 gWorld : WORLD;
 float4x4 gWorldViewProj : WORLDVIEWPROJECTION; 
 float3 gLightDirection = float3(-0.577f, -0.577f, 0.577f);
+float3 gPlayerColor = float3(1.f, 0.f, 0.f);
+bool gUseColor = false;
 
 float4x4 gBones[70];
 
@@ -85,8 +87,13 @@ VS_OUTPUT VS(VS_INPUT input)
 float4 PS(VS_OUTPUT input) : SV_TARGET{
 
 	float4 diffuseColor = gDiffuseMap.Sample( samLinear,input.texCoord );
-	float3 color_rgb= diffuseColor.rgb;
+	float3 color_rgb = diffuseColor.rgb;
 	float color_a = diffuseColor.a;
+	
+    if (gUseColor)
+    {
+        color_rgb *= gPlayerColor;
+    }
 	
 	//HalfLambert Diffuse :)
 	float diffuseStrength = dot(input.normal, -gLightDirection);
