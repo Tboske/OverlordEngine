@@ -3,6 +3,7 @@
 
 
 #include "Prefabs/Player.h"
+#include "Prefabs/Text.h"
 
 #include "Materials/DiffuseMaterial.h"
 #include "Materials/UberMaterial.h"
@@ -30,7 +31,7 @@ void ProjectScene::Initialize()
 	m_pCamera = AddChild(new FixedCamera());
 	m_pCamera->GetTransform()->Translate(0, 45, 0);
 	m_pCamera->GetTransform()->Rotate(90, 0, 0);
-	SetActiveCamera(m_pCamera->GetComponent<CameraComponent>());
+	//SetActiveCamera(m_pCamera->GetComponent<CameraComponent>());
 
 	InitArena(pPhysxMaterial);
 
@@ -63,25 +64,48 @@ void ProjectScene::Initialize()
 			InitBlock(pPhysxMaterial, x, y);
 
 
-	m_pPlayer1 = AddChild(new Player(0, -20, -15));
-	m_pPlayer1->AddInput(m_SceneContext, Player::MoveForward	, 'W');
-	m_pPlayer1->AddInput(m_SceneContext, Player::MoveBackward	, 'S');
-	m_pPlayer1->AddInput(m_SceneContext, Player::MoveLeft		, 'A');
-	m_pPlayer1->AddInput(m_SceneContext, Player::MoveRight		, 'D');
-	m_pPlayer1->AddInput(m_SceneContext, Player::DropBomb		, VK_SPACE);
+	auto pPlayer = m_Players.emplace_back(AddChild(new Player(0, -20, -15)));
+	pPlayer->AddInput(m_SceneContext, Player::MoveForward		, 'W');
+	pPlayer->AddInput(m_SceneContext, Player::MoveBackward		, 'S');
+	pPlayer->AddInput(m_SceneContext, Player::MoveLeft			, 'A');
+	pPlayer->AddInput(m_SceneContext, Player::MoveRight		, 'D');
+	pPlayer->AddInput(m_SceneContext, Player::DropBomb			, VK_SPACE);
+	
+	auto pPlayer2 = m_Players.emplace_back(AddChild(new Player(1, 20, 15)));
+	pPlayer2->AddInput(m_SceneContext, Player::MoveForward		, VK_UP);
+	pPlayer2->AddInput(m_SceneContext, Player::MoveBackward	, VK_DOWN);
+	pPlayer2->AddInput(m_SceneContext, Player::MoveLeft		, VK_LEFT);
+	pPlayer2->AddInput(m_SceneContext, Player::MoveRight		, VK_RIGHT);
+	pPlayer2->AddInput(m_SceneContext, Player::DropBomb		, VK_NUMPAD0);
 
-	m_pPlayer2 = AddChild(new Player(1, 20, 15));
-	m_pPlayer2->AddInput(m_SceneContext, Player::MoveForward	, VK_UP);
-	m_pPlayer2->AddInput(m_SceneContext, Player::MoveBackward	, VK_DOWN);
-	m_pPlayer2->AddInput(m_SceneContext, Player::MoveLeft		, VK_LEFT);
-	m_pPlayer2->AddInput(m_SceneContext, Player::MoveRight		, VK_RIGHT);
-	m_pPlayer2->AddInput(m_SceneContext, Player::DropBomb		, VK_NUMPAD0);
+
+
 }
 
 void ProjectScene::Update()
 {
+	if (m_GameEnded)
+		return;
+
 	if (m_SceneContext.pInput->IsKeyboardKey(InputState::released, VK_ESCAPE))
 		SceneManager::Get()->SetActiveGameScene(L"InGameMenu");
+
+	
+	if (m_Players.size() == 0)
+	{
+		// tie
+		m_pEndGameScreen->SetText(L"Tie");
+		m_GameEnded = true;
+	}
+		
+		
+	if (m_Players.size() == 1)
+	{
+		// player wins
+		
+		m_pEndGameScreen->SetText(L"Player x: won");
+		m_GameEnded = true;
+	}
 }
 
 void ProjectScene::Draw()

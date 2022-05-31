@@ -1,10 +1,17 @@
 #pragma once
 
-class Score;
+class Text;
 class Bomb;
 
 class Player final : public GameObject
 {
+	enum PlayerState
+	{
+		Moving,
+		Idle,
+		DroppingBomb,
+		Dead
+	};
 public:
 	enum InputIds
 	{
@@ -20,6 +27,8 @@ public:
 
 	void AddInput(const SceneContext& sc, InputIds input, UINT virtualKey);
 
+	void Kill();
+
 protected:
 	virtual void Initialize(const SceneContext&) override;
 	virtual void Draw(const SceneContext&) override;
@@ -33,8 +42,12 @@ private:
 	float m_MoveSpeed = 0.1f;
 	int m_player = 0;
 
-	Score* m_pScore = nullptr;
+	Text* m_pScoreBoard = nullptr;
+	PlayerState m_State = Moving; // default to the first animation
 
 	XMFLOAT3 m_Color = { 1.f, 0.f, 0.f };
+
+
+	void ChangeState(PlayerState state);
 };
 

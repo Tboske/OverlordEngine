@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Player.h"
 
-#include "Score.h"
+#include "Text.h"
 #include "Bomb.h"
 #include "Materials/DiffuseMaterial_Skinned.h"
 
@@ -61,6 +61,11 @@ void Player::AddInput(const SceneContext& sc, InputIds input, UINT virtualKey)
 	sc.pInput->AddInputAction(InputAction( UniqueInputID(m_player, input), InputState::down, virtualKey));
 }
 
+void Player::Kill()
+{
+	ChangeState(Dead);
+}
+
 void Player::Initialize(const SceneContext&)
 {
 	m_pBomb = GetScene()->AddChild(new Bomb(this));
@@ -79,8 +84,10 @@ void Player::Initialize(const SceneContext&)
 
 
 
-	m_pScore = AddChild(new Score());
-	m_pScore->SetColor(m_Color);
+	m_pScoreBoard = AddChild(new Text());
+	m_pScoreBoard->SetColor(m_Color);
+
+	
 }
 
 void Player::Draw(const SceneContext&)
@@ -89,6 +96,10 @@ void Player::Draw(const SceneContext&)
 
 void Player::Update(const SceneContext& sceneContext)
 {
+	if (m_State == Dead)
+	{
+		return;
+	}
 
 	//## Input Gathering (move)
 	XMFLOAT3 move = XMFLOAT3(0, 0, 0);
@@ -125,10 +136,14 @@ void Player::Update(const SceneContext& sceneContext)
 		m_pRigid->SetDensity(0.2f);
 		m_pRigid->AddForce(move, PxForceMode::eIMPULSE);
 		GetTransform()->Rotate(0, rot, 0);
+
+		ChangeState(Moving);
 	}
 	else
 	{
 		GetTransform()->Translate(GetTransform()->GetPosition());
+
+		ChangeState(Idle);
 	}
 
 	// bomb
@@ -138,4 +153,14 @@ void Player::Update(const SceneContext& sceneContext)
 		if (!m_pBomb->IsActive())
 			m_pBomb->Activate(GetTransform()->GetPosition());
 	}
+}
+
+void Player::ChangeState(PlayerState state)
+{
+	if (state == m_State)
+		return;
+
+	m_State = state;
+	m_pAnimator->SetAnimation(state);
+	m_pAnimator->Play();
 }

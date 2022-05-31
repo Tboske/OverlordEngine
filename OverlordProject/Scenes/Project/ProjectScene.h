@@ -1,5 +1,6 @@
 #pragma once
 
+class Text;
 class Player;
 class Character;
 class BoxMaterial;
@@ -33,8 +34,10 @@ private:
 	BoxMaterial* m_pBoxMaterial = nullptr;
 	BoxMaterial* m_pBlockMaterial = nullptr;
 
-	Player* m_pPlayer1 = nullptr;
-	Player* m_pPlayer2 = nullptr;
+	std::vector<Player*> m_Players;
+
+	Text* m_pEndGameScreen = nullptr;
+	bool m_GameEnded = false;
 
 	FixedCamera* m_pCamera = nullptr;
 

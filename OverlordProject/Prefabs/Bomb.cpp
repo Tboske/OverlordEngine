@@ -38,7 +38,7 @@ void Bomb::Activate(const XMFLOAT3& pos)
 }
 
 // if the player is hit, the Gameobject pointer is filled with the player pointer
-GameObject* RaycastExplosion(PhysxProxy* pPhysxProx, const PxVec3& pos, const PxVec3& dir, PxRaycastHit& info, GameObject* pPlayer = nullptr)
+GameObject* RaycastExplosion(PhysxProxy* pPhysxProx, const PxVec3& pos, const PxVec3& dir, PxRaycastHit& info, std::vector<Player*>& pPlayer)
 {
 	PxQueryFilterData filterData;
 	filterData.data.word0 = ~static_cast<PxU32>(CollisionGroup::Group1 | CollisionGroup::Group9);
@@ -52,7 +52,7 @@ GameObject* RaycastExplosion(PhysxProxy* pPhysxProx, const PxVec3& pos, const Px
 			auto go = static_cast<BaseComponent*>(info.actor->userData)->GetGameObject();
 
 			if (go->GetTag() == L"Player")
-				pPlayer = go;
+				pPlayer.push_back(dynamic_cast<Player*>(go));
 
 			if (go->GetTag() == L"Box")
 				return go;
@@ -137,30 +137,37 @@ void Bomb::Update(const SceneContext& sc)
 		else
 		{
 			std::vector<ExplosionVertex> bombExplosion;
+			std::vector<Player*> hitPlayers;
 
 			// cast rays in 4 directions
 			const auto& physxProxy = GetScene()->GetPhysxProxy();
 			auto* scene = static_cast<ProjectScene*>(GetScene());
 			PxRaycastHit hitInfo;
+			
 			// north
-			if (auto go = RaycastExplosion(physxProxy, PhysxHelper::ToPxVec3(pos), { 0,0,1 }, hitInfo))
+			if (auto go = RaycastExplosion(physxProxy, PhysxHelper::ToPxVec3(pos), { 0,0,1 }, hitInfo, hitPlayers))
 				scene->GetArena()->RemoveChild(go, true);
 			AddVertices(bombExplosion, pos, MathHelper::ToXMFloat3(hitInfo.position));
 
 			// east
-			if (auto go = RaycastExplosion(physxProxy, PhysxHelper::ToPxVec3(pos), { 1,0,0 }, hitInfo))
+			if (auto go = RaycastExplosion(physxProxy, PhysxHelper::ToPxVec3(pos), { 1,0,0 }, hitInfo, hitPlayers))
 				scene->GetArena()->RemoveChild(go, true);
 			AddVertices(bombExplosion, pos, MathHelper::ToXMFloat3(hitInfo.position));
 
 			// south
-			if (auto go = RaycastExplosion(physxProxy, PhysxHelper::ToPxVec3(pos), { 0,0,-1 }, hitInfo))
+			if (auto go = RaycastExplosion(physxProxy, PhysxHelper::ToPxVec3(pos), { 0,0,-1 }, hitInfo, hitPlayers))
 				scene->GetArena()->RemoveChild(go, true);
 			AddVertices(bombExplosion, pos, MathHelper::ToXMFloat3(hitInfo.position));
 
 			// west
-			if (auto go = RaycastExplosion(physxProxy, PhysxHelper::ToPxVec3(pos), { -1,0,0 }, hitInfo))
+			if (auto go = RaycastExplosion(physxProxy, PhysxHelper::ToPxVec3(pos), { -1,0,0 }, hitInfo, hitPlayers))
 				scene->GetArena()->RemoveChild(go, true);
 			AddVertices(bombExplosion, pos, MathHelper::ToXMFloat3(hitInfo.position));
+
+
+			// kill the players that were hit
+			for (const auto& player : hitPlayers)
+				player->Kill();
 
 			m_pBombEffect->ActivateEffect(bombExplosion);
 			m_Exploded = true;
