@@ -25,17 +25,17 @@ void CubePrefab::Initialize(const SceneContext&)
 	//FRONT
 	pMesh->AddQuad(
 		VertexPosNormCol(XMFLOAT3(-halfWidth, halfHeight, -halfDepth), XMFLOAT3(0, 0, -1), m_Color),
-		VertexPosNormCol(XMFLOAT3(halfWidth, halfHeight, -halfDepth), XMFLOAT3(0, 0, -1), m_Color),
-		VertexPosNormCol(XMFLOAT3(halfWidth, -halfHeight, -halfDepth), XMFLOAT3(0, 0, -1), m_Color),
+		VertexPosNormCol(XMFLOAT3( halfWidth, halfHeight, -halfDepth), XMFLOAT3(0, 0, -1), m_Color),
+		VertexPosNormCol(XMFLOAT3( halfWidth, -halfHeight, -halfDepth), XMFLOAT3(0, 0, -1), m_Color),
 		VertexPosNormCol(XMFLOAT3(-halfWidth, -halfHeight, -halfDepth), XMFLOAT3(0, 0, -1), m_Color)
 	);
 
 	//BACK
 	pMesh->AddQuad(
-		VertexPosNormCol(XMFLOAT3(halfWidth, halfHeight, halfDepth), XMFLOAT3(0, 0, 1), m_Color),
+		VertexPosNormCol(XMFLOAT3( halfWidth, halfHeight, halfDepth), XMFLOAT3(0, 0, 1), m_Color),
 		VertexPosNormCol(XMFLOAT3(-halfWidth, halfHeight, halfDepth), XMFLOAT3(0, 0, 1), m_Color),
 		VertexPosNormCol(XMFLOAT3(-halfWidth, -halfHeight, halfDepth), XMFLOAT3(0, 0, 1), m_Color),
-		VertexPosNormCol(XMFLOAT3(halfWidth, -halfHeight, halfDepth), XMFLOAT3(0, 0, 1), m_Color)
+		VertexPosNormCol(XMFLOAT3( halfWidth, -halfHeight, halfDepth), XMFLOAT3(0, 0, 1), m_Color)
 	);
 
 	//LEFT

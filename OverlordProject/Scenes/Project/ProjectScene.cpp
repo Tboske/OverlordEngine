@@ -36,6 +36,8 @@ void ProjectScene::Initialize()
 	m_pEndGameScreen = AddChild(new Text({ m_SceneContext.windowWidth / 2, m_SceneContext.windowHeight / 2 }, { 0.f, 0.f }, center));
 	m_pEndGameScreen->SetVisible(false);
 
+	m_pContinueScreen = AddChild(new Text({ m_SceneContext.windowWidth / 2, m_SceneContext.windowHeight / 2 + 30 }, { 0.f, 0.f }, center, L"Press left mouse button to continue", false));
+
 	InitArena(pPhysxMaterial);
 
 #pragma region boxes
@@ -86,7 +88,7 @@ void ProjectScene::Update()
 {
 	if (m_GameEnded)
 	{
-		if (m_SceneContext.pInput->IsMouseButton(InputState::released, 1))
+		if (m_SceneContext.pInput->IsMouseButton(InputState::released, VK_LBUTTON))
 			SceneManager::Get()->SetActiveGameScene(L"MainMenu");
 
 		return;
@@ -106,6 +108,7 @@ void ProjectScene::Update()
 		
 		m_pEndGameScreen->SetText(L"Player x: won");
 		m_pEndGameScreen->SetVisible(true);
+		m_pContinueScreen->SetVisible(true);
 		m_GameEnded = true;
 	}
 }

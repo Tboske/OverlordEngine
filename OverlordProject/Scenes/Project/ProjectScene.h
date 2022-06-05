@@ -37,6 +37,7 @@ private:
 	std::vector<Player*> m_Players;
 
 	Text* m_pEndGameScreen = nullptr;
+	Text* m_pContinueScreen = nullptr;
 	bool m_GameEnded = false;
 
 	FixedCamera* m_pCamera = nullptr;

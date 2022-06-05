@@ -1,5 +1,7 @@
 #pragma once
 
+class Text;
+
 class Button final : public GameObject
 {
 public:
@@ -16,14 +18,9 @@ public:
 	Button(Button&&) noexcept = delete;
 	Button& operator=(const Button&) = delete;
 	Button& operator=(Button&&) noexcept = delete;
-
-protected:
-	void Initialize(const SceneContext&) override;
-	void Draw(const SceneContext&) override;
+	
 
 private:
-	std::wstring m_Text;
-	XMFLOAT2 m_Position;
-	SpriteFont* m_pFont = nullptr;
+	Text* m_pText;
 };
 

@@ -3,20 +3,69 @@
 
 #include "ProjectScene.h"
 #include "Prefabs/Button.h"
+#include "Materials/DiffuseMaterial.h"
+#include "Prefabs/CubePrefab.h"
+#include "Prefabs/Text.h"
 
 
 void MainMenu::Initialize()
 {
+	auto pBackgroundMat = MaterialManager::Get()->CreateMaterial<DiffuseMaterial>();
+	pBackgroundMat->SetDiffuseTexture(L"Textures/Project/Menu.png");
+
 	// background
-	AddChild(new Button(0, 0, L"", { 1, 1, 1, 1 }, 0, 200, 100));
+	auto pBackGround = AddChild(new GameObject());
+	{
+		auto* pModelComp = pBackGround->AddComponent(new ModelComponent(L"Meshes/Project/Floor.ovm"));
+		pModelComp->SetMaterial(pBackgroundMat);
+
+		pBackGround->GetTransform()->Translate(-30, -26, 0);
+		pBackGround->GetTransform()->Rotate(-90, 90, 90);
+		pBackGround->GetTransform()->Scale(100, 1, 58);
+	}
+
+
+	const auto pPhysxMaterial = PxGetPhysics().createMaterial(0.f, 0.f, 0.0f);
 
 	// Play Button
-	m_pPlay = new Button(0, 8, L"Start", { 0,1,1,1 }, 0.5f, 20, 5);
-	AddChild(m_pPlay);
+	float x = -20, y = 15, w = 20, h = 5;
+	auto pPlayButton = AddChild(new GameObject());
+	{
+		m_pPlay = pPlayButton->AddChild(new CubePrefab(w, h, 0.1f, { 1,0,0,1 }));
+		m_pPlay->GetTransform()->Translate(x, y, -0.5f);
+
+		auto pRigid = m_pPlay->AddComponent(new RigidBodyComponent(true));
+			pRigid->AddCollider(PxBoxGeometry(w / 2, h / 2, 0.1f), *pPhysxMaterial);
+			pRigid->SetCollisionGroup(CollisionGroup::Group5);
+
+
+		pPlayButton->AddChild(new Text(
+			{ 300, 140 },
+			{ 0,0 },
+			center,
+			L"Start"
+		));
+	}
 
 	// Exit Button
-	m_pExit = new Button(0, -6, L"Exit", { 1, 0,0,1 }, 0.5f, 16, 5);
-	AddChild(m_pExit);
+	x = -19, y = 6, w = 16, h = 5;
+	auto pExitButton = AddChild(new GameObject());
+	{
+		m_pExit = pExitButton->AddChild(new CubePrefab(w, h, 0.1f, { 1,0,0,1 }));
+		m_pExit->GetTransform()->Translate(x, y, -0.5f);
+
+		auto pRigid = m_pExit->AddComponent(new RigidBodyComponent(true));
+		pRigid->AddCollider(PxBoxGeometry(w / 2, h / 2, 0.1f), *pPhysxMaterial);
+		pRigid->SetCollisionGroup(CollisionGroup::Group5);
+
+
+		pExitButton->AddChild(new Text(
+			{ 340, 275 },
+			{ 0,0 },
+			center,
+			L"Exit"
+		));
+	}
 
 	// Camera
 	auto* pCamera = AddChild(new FixedCamera());

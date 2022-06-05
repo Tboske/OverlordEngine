@@ -12,7 +12,7 @@ enum TextPivot
 class Text final : public GameObject
 {
 public:
-	Text(XMFLOAT2 pos, XMFLOAT2 padding, TextPivot pivot = leftTop, const std::wstring& text = L"Text"
+	Text(XMFLOAT2 pos, XMFLOAT2 padding, TextPivot pivot = leftTop, const std::wstring& text = L"Text", bool visibility = true
 		, const XMFLOAT4& color = { 1,1,1,1 }
 	);
 	~Text() override = default;

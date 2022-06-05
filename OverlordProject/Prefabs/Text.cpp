@@ -3,10 +3,11 @@
 
 #include "CubePrefab.h"
 
-Text::Text(XMFLOAT2 pos, XMFLOAT2 padding, TextPivot pivot, const std::wstring& text, const XMFLOAT4& color)
+Text::Text(XMFLOAT2 pos, XMFLOAT2 padding, TextPivot pivot, const std::wstring& text, bool visibility, const XMFLOAT4& color)
 	: m_Position(pos)
 	, m_PivotOffset(pivot)
 	, m_Padding(padding)
+	, m_Visible(visibility)
 	, m_Color(color)
 	, m_Text(text)
 	, m_pFont(ContentManager::Load<SpriteFont>(L"SpriteFonts/Arial_32.fnt"))

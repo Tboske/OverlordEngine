@@ -14,7 +14,7 @@ Player::Player(int player, float x, float z)
 		m_pRigid = AddComponent(new RigidBodyComponent());
 		m_pRigid->SetConstraint(RigidBodyConstraint::TransY, false);
 		m_pRigid->SetConstraint(RigidBodyConstraint::AllRot, false);
-		m_pRigid->AddCollider(PxCapsuleGeometry(1.25f, 0.1f), *pPhysxMaterial, false, { 0,1.5f,0 });
+		m_pRigid->AddCollider(PxCapsuleGeometry(1.2f, 0.08f), *pPhysxMaterial, false, { 0,1.5f,0 });
 
 		m_pRigid->SetCollisionGroup(CollisionGroup::Group0);
 		m_pRigid->SetCollisionIgnoreGroups(CollisionGroup::Group1 | CollisionGroup::Group5 | CollisionGroup::Group6);
@@ -59,19 +59,19 @@ void Player::Initialize(const SceneContext&)
 	{
 	case 0:
 		m_Color = { 1.f,0.f,0.f, 1.f };
-		m_pScoreBoard = AddChild(new Text({ 0, 0 }, { 10, 10 }, leftTop, L"0", m_Color));
+		m_pScoreBoard = AddChild(new Text({ 0, 0 }, { 10, 10 }, leftTop, L"0", true, m_Color));
 		break;
 	case 1:
 		m_Color = { 0.f,1.f,0.f, 1.f };
-		m_pScoreBoard = AddChild(new Text({ sc.windowWidth, 0 }, { 10, 10 }, rightTop, L"0", m_Color));
+		m_pScoreBoard = AddChild(new Text({ sc.windowWidth, 0 }, { 10, 10 }, rightTop, L"0", true, m_Color));
 		break;
 	case 2:
 		m_Color = { 0.f,0.f,1.f, 1.f };
-		m_pScoreBoard = AddChild(new Text({ 0, sc.windowHeight }, { 10, 10 }, leftBottom, L"0", m_Color));
+		m_pScoreBoard = AddChild(new Text({ 0, sc.windowHeight }, { 10, 10 }, leftBottom, L"0", true, m_Color));
 		break;
 	case 3:
 		m_Color = { 1.f,1.f,0.f, 1.f };
-		m_pScoreBoard = AddChild(new Text({ sc.windowWidth, sc.windowHeight }, { 10, 10 }, rightBottom, L"0", m_Color));
+		m_pScoreBoard = AddChild(new Text({ sc.windowWidth, sc.windowHeight }, { 10, 10 }, rightBottom, L"0", true, m_Color));
 		break;
 	}
 
