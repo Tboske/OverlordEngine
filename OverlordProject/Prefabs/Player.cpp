@@ -54,18 +54,6 @@ void Player::Initialize(const SceneContext&)
 {
 	m_pBomb = GetScene()->AddChild(new Bomb(this));
 
-
-	const auto pPlayerMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Skinned>();
-	pPlayerMaterial->SetDiffuseTexture(L"Textures/Project/Player_diffuse.png");
-	pPlayerMaterial->SetVariable_Scalar(L"gUseColor", true);
-	pPlayerMaterial->SetVariable_Vector(L"gPlayerColor", m_Color);
-
-
-	const auto pModel = AddComponent(new ModelComponent(L"Meshes/Project/Player.ovm"));
-	pModel->SetMaterial(pPlayerMaterial);
-	m_pAnimator = pModel->GetAnimator();
-	m_pAnimator->Play();
-
 	const auto& sc = GetScene()->GetSceneContext();
 	switch (m_Player)
 	{
@@ -86,6 +74,17 @@ void Player::Initialize(const SceneContext&)
 		m_pScoreBoard = AddChild(new Text({ sc.windowWidth, sc.windowHeight }, { 10, 10 }, rightBottom, L"0", m_Color));
 		break;
 	}
+
+	const auto pPlayerMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Skinned>();
+	pPlayerMaterial->SetDiffuseTexture(L"Textures/Project/Player_diffuse.png");
+	pPlayerMaterial->SetVariable_Scalar(L"gUseColor", true);
+	pPlayerMaterial->SetVariable_Vector(L"gPlayerColor", m_Color);
+
+
+	const auto pModel = AddComponent(new ModelComponent(L"Meshes/Project/Player.ovm"));
+	pModel->SetMaterial(pPlayerMaterial);
+	m_pAnimator = pModel->GetAnimator();
+	m_pAnimator->Play();
 }
 
 void Player::Draw(const SceneContext&)

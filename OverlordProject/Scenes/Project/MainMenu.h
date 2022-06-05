@@ -1,5 +1,6 @@
 #pragma once
 
+class ProjectScene;
 class Button;
 
 class MainMenu final : public GameScene
@@ -16,12 +17,14 @@ protected:
 	virtual void Initialize() override;
 	virtual void Update() override;
 	virtual void Draw() override;
+	virtual void OnSceneActivated() override;
 
 private:
 	Button* m_pPlay = nullptr;
 	Button* m_pExit = nullptr;
 
 	CameraComponent* m_pCameraComponent = nullptr;
-	
+
+	ProjectScene* m_ProjectScene = nullptr;
 };
 

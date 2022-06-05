@@ -49,3 +49,11 @@ void MainMenu::Draw()
 {
 
 }
+
+void MainMenu::OnSceneActivated()
+{
+	SceneManager::Get()->RemoveGameScene(m_ProjectScene, true);
+
+	m_ProjectScene = new ProjectScene();
+	SceneManager::Get()->AddGameScene(m_ProjectScene);
+}

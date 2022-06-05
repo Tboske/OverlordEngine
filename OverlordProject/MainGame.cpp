@@ -171,7 +171,6 @@ void MainGame::Initialize()
 #ifdef PROJECT
 	SceneManager::Get()->AddGameScene(new MainMenu());
 	SceneManager::Get()->AddGameScene(new InGameMenu());
-	SceneManager::Get()->AddGameScene(new ProjectScene());
 #endif
 }
 

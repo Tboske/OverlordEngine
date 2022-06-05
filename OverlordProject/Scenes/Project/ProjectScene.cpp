@@ -80,15 +80,17 @@ void ProjectScene::Initialize()
 	pPlayer2->AddInput(m_SceneContext, Player::MoveLeft		, VK_LEFT);
 	pPlayer2->AddInput(m_SceneContext, Player::MoveRight		, VK_RIGHT);
 	pPlayer2->AddInput(m_SceneContext, Player::DropBomb		, VK_NUMPAD0);
-
-
-
 }
 
 void ProjectScene::Update()
 {
 	if (m_GameEnded)
+	{
+		if (m_SceneContext.pInput->IsMouseButton(InputState::released, 1))
+			SceneManager::Get()->SetActiveGameScene(L"MainMenu");
+
 		return;
+	}
 
 	if (m_SceneContext.pInput->IsKeyboardKey(InputState::released, VK_ESCAPE))
 		SceneManager::Get()->SetActiveGameScene(L"InGameMenu");

@@ -22,7 +22,7 @@ public:
 	Text& operator=(Text&&) noexcept = delete;
 
 	
-	void SetText(const std::wstring& text) { m_Text = text; }
+	void SetText(const std::wstring& text);
 	void SetVisible(bool visible) { m_Visible = visible; }
 
 protected:

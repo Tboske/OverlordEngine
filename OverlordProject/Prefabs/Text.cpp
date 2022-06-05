@@ -14,6 +14,13 @@ Text::Text(XMFLOAT2 pos, XMFLOAT2 padding, TextPivot pivot, const std::wstring& 
 	UpdateOffset();
 }
 
+void Text::SetText(const std::wstring& text)
+{
+	m_Text = text;
+
+	UpdateOffset();
+}
+
 void Text::Update(const SceneContext&)
 {
 	if (!m_Visible)
@@ -37,7 +44,7 @@ void Text::UpdateOffset()
 		break;
 
 	case rightTop:
-		m_Position.x -= size / 2 * m_Text.size();
+		m_Position.x -= size / 3.f * m_Text.size();
 
 		m_Position.x -= m_Padding.x;
 		m_Position.y += m_Padding.y;
@@ -51,7 +58,7 @@ void Text::UpdateOffset()
 		break;
 
 	case rightBottom:
-		m_Position.x -= size / 2 * m_Text.size();
+		m_Position.x -= size / 3.f * m_Text.size();
 		m_Position.y -= size;
 
 		m_Position.x -= m_Padding.x;
@@ -59,7 +66,7 @@ void Text::UpdateOffset()
 		break;
 
 	case center:
-		m_Position.x -= (size / 2 * m_Text.size()) /2;
+		m_Position.x -= (size / 3.f * m_Text.size()) /2;
 		m_Position.y -= size / 2;
 		break;
 	}
