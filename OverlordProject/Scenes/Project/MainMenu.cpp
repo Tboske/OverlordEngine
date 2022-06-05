@@ -31,7 +31,7 @@ void MainMenu::Initialize()
 	float x = -20, y = 15, w = 20, h = 5;
 	auto pPlayButton = AddChild(new GameObject());
 	{
-		m_pPlay = pPlayButton->AddChild(new CubePrefab(w, h, 0.1f, { 1,0,0,1 }));
+		m_pPlay = pPlayButton->AddChild(new CubePrefab(w, h, 0.1f, { 0.8f,0,0,1 }));
 		m_pPlay->GetTransform()->Translate(x, y, -0.5f);
 
 		auto pRigid = m_pPlay->AddComponent(new RigidBodyComponent(true));
@@ -51,7 +51,7 @@ void MainMenu::Initialize()
 	x = -19, y = 6, w = 16, h = 5;
 	auto pExitButton = AddChild(new GameObject());
 	{
-		m_pExit = pExitButton->AddChild(new CubePrefab(w, h, 0.1f, { 1,0,0,1 }));
+		m_pExit = pExitButton->AddChild(new CubePrefab(w, h, 0.1f, { 0.8f,0,0,1 }));
 		m_pExit->GetTransform()->Translate(x, y, -0.5f);
 
 		auto pRigid = m_pExit->AddComponent(new RigidBodyComponent(true));
