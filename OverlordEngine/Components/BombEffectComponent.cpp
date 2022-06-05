@@ -9,7 +9,7 @@ BombEffectComponent::BombEffectComponent(const std::wstring& file)
 	, m_ElapsedVal(0)
 {
 	m_ExplosionSettings.duration = 0.2f;
-	m_ExplosionSettings.intensity = 1.f;
+	m_ExplosionSettings.intensity = 1.2f;
 
 	m_pExplosionArray.reserve(150);
 }

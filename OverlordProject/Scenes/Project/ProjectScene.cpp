@@ -29,9 +29,12 @@ void ProjectScene::Initialize()
 
 
 	m_pCamera = AddChild(new FixedCamera());
-	m_pCamera->GetTransform()->Translate(0, 45, 0);
-	m_pCamera->GetTransform()->Rotate(90, 0, 0);
-	//SetActiveCamera(m_pCamera->GetComponent<CameraComponent>());
+	m_pCamera->GetTransform()->Translate(0, 42, -8);
+	m_pCamera->GetTransform()->Rotate(80, 0, 0);
+	SetActiveCamera(m_pCamera->GetComponent<CameraComponent>());
+	
+	m_pEndGameScreen = AddChild(new Text({ m_SceneContext.windowWidth / 2, m_SceneContext.windowHeight / 2 }, { 0.f, 0.f }, center));
+	m_pEndGameScreen->SetVisible(false);
 
 	InitArena(pPhysxMaterial);
 
@@ -90,20 +93,17 @@ void ProjectScene::Update()
 	if (m_SceneContext.pInput->IsKeyboardKey(InputState::released, VK_ESCAPE))
 		SceneManager::Get()->SetActiveGameScene(L"InGameMenu");
 
-	
-	if (m_Players.size() == 0)
-	{
-		// tie
-		m_pEndGameScreen->SetText(L"Tie");
-		m_GameEnded = true;
-	}
+	int size{};
+	for (const auto& player : m_Players)
+		if (!player->IsDead())
+			++size;
 		
-		
-	if (m_Players.size() == 1)
+	if (size == 1)
 	{
 		// player wins
 		
 		m_pEndGameScreen->SetText(L"Player x: won");
+		m_pEndGameScreen->SetVisible(true);
 		m_GameEnded = true;
 	}
 }
@@ -224,7 +224,7 @@ void ProjectScene::InitArena(PxMaterial* physxMat)
 	InitRock(pRockMat, -24.f, 0.f, 4.f, 10);
 	InitRock(pRockMat, -25.5f, -3.f, 7.f, 220);
 	InitRock(pRockMat, -26.f, -6.5f, 8.f, 110);
-	InitRock(pRockMat, -27.5f, -9.f, 10.f, 210);
+	InitRock(pRockMat, -27.5f, -9.3f, 10.f, 210);
 	InitRock(pRockMat, -26.5f, -14.f, 7.f, 260);
 	InitRock(pRockMat, -24.5f, -19.f, 4.f, 60);
 #pragma endregion

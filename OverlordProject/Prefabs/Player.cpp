@@ -6,7 +6,7 @@
 #include "Materials/DiffuseMaterial_Skinned.h"
 
 Player::Player(int player, float x, float z)
-	: m_player( player )
+	: m_Player( player )
 {
 	const auto pPhysxMaterial = PxGetPhysics().createMaterial(0.5f, 0.5f, 0.0f);
 
@@ -14,31 +14,15 @@ Player::Player(int player, float x, float z)
 		m_pRigid = AddComponent(new RigidBodyComponent());
 		m_pRigid->SetConstraint(RigidBodyConstraint::TransY, false);
 		m_pRigid->SetConstraint(RigidBodyConstraint::AllRot, false);
-		m_pRigid->AddCollider(PxCapsuleGeometry(1, 0.25), *pPhysxMaterial, false, { 0,1.25,0 });
+		m_pRigid->AddCollider(PxCapsuleGeometry(1.25f, 0.1f), *pPhysxMaterial, false, { 0,1.5f,0 });
 
 		m_pRigid->SetCollisionGroup(CollisionGroup::Group0);
-		m_pRigid->SetCollisionIgnoreGroups(CollisionGroup::Group1);
-
+		m_pRigid->SetCollisionIgnoreGroups(CollisionGroup::Group1 | CollisionGroup::Group5 | CollisionGroup::Group6);
+		m_pRigid->SetDensity(0.2f);
+		
 		GetTransform()->Scale(0.02f);
 		GetTransform()->Translate(x, 0, z);
 		SetTag(L"Player");
-	}
-
-
-	switch (player)
-	{
-	case 0:
-		m_Color = { 1.f,0.f,0.f };
-		break;
-	case 1:
-		m_Color = { 0.f,1.f,0.f };
-		break;
-	case 2:
-		m_Color = { 0.f,0.f,1.f };
-		break;
-	case 3:
-		m_Color = { 1.f,1.f,0.f };
-		break;
 	}
 }
 
@@ -58,7 +42,7 @@ int UniqueInputID(int player, Player::InputIds inputID)
 void Player::AddInput(const SceneContext& sc, InputIds input, UINT virtualKey)
 {
 
-	sc.pInput->AddInputAction(InputAction( UniqueInputID(m_player, input), InputState::down, virtualKey));
+	sc.pInput->AddInputAction(InputAction( UniqueInputID(m_Player, input), InputState::down, virtualKey));
 }
 
 void Player::Kill()
@@ -82,12 +66,26 @@ void Player::Initialize(const SceneContext&)
 	m_pAnimator = pModel->GetAnimator();
 	m_pAnimator->Play();
 
-
-
-	m_pScoreBoard = AddChild(new Text());
-	m_pScoreBoard->SetColor(m_Color);
-
-	
+	const auto& sc = GetScene()->GetSceneContext();
+	switch (m_Player)
+	{
+	case 0:
+		m_Color = { 1.f,0.f,0.f, 1.f };
+		m_pScoreBoard = AddChild(new Text({ 0, 0 }, { 10, 10 }, leftTop, L"0", m_Color));
+		break;
+	case 1:
+		m_Color = { 0.f,1.f,0.f, 1.f };
+		m_pScoreBoard = AddChild(new Text({ sc.windowWidth, 0 }, { 10, 10 }, rightTop, L"0", m_Color));
+		break;
+	case 2:
+		m_Color = { 0.f,0.f,1.f, 1.f };
+		m_pScoreBoard = AddChild(new Text({ 0, sc.windowHeight }, { 10, 10 }, leftBottom, L"0", m_Color));
+		break;
+	case 3:
+		m_Color = { 1.f,1.f,0.f, 1.f };
+		m_pScoreBoard = AddChild(new Text({ sc.windowWidth, sc.windowHeight }, { 10, 10 }, rightBottom, L"0", m_Color));
+		break;
+	}
 }
 
 void Player::Draw(const SceneContext&)
@@ -96,8 +94,11 @@ void Player::Draw(const SceneContext&)
 
 void Player::Update(const SceneContext& sceneContext)
 {
+	float dT = sceneContext.pGameTime->GetElapsed();
+
 	if (m_State == Dead)
 	{
+		PlayerDied(dT);
 		return;
 	}
 
@@ -106,25 +107,25 @@ void Player::Update(const SceneContext& sceneContext)
 	float rot{};
 	bool isMoving = false;
 	
-	if (sceneContext.pInput->IsActionTriggered(UniqueInputID(m_player, MoveForward)))
+	if (sceneContext.pInput->IsActionTriggered(UniqueInputID(m_Player, MoveForward)))
 	{
 		move.z += m_MoveSpeed * 10;
 		rot = 180.f;
 		isMoving = true;
 	}
-	if (sceneContext.pInput->IsActionTriggered(UniqueInputID(m_player, MoveBackward)))
+	if (sceneContext.pInput->IsActionTriggered(UniqueInputID(m_Player, MoveBackward)))
 	{
 		move.z -= m_MoveSpeed * 10;
 		rot = 0.f;
 		isMoving = true;
 	}
-	if (sceneContext.pInput->IsActionTriggered(UniqueInputID(m_player, MoveRight)))
+	if (sceneContext.pInput->IsActionTriggered(UniqueInputID(m_Player, MoveRight)))
 	{
 		move.x += m_MoveSpeed * 10;
 		rot = 270.f;
 		isMoving = true;
 	}
-	if (sceneContext.pInput->IsActionTriggered(UniqueInputID(m_player, MoveLeft)))
+	if (sceneContext.pInput->IsActionTriggered(UniqueInputID(m_Player, MoveLeft)))
 	{
 		move.x -= m_MoveSpeed * 10;
 		rot = 90.f;
@@ -133,8 +134,7 @@ void Player::Update(const SceneContext& sceneContext)
 
 	if (isMoving)
 	{
-		m_pRigid->SetDensity(0.2f);
-		m_pRigid->AddForce(move, PxForceMode::eIMPULSE);
+		m_pRigid->AddForce(move, PxForceMode::eVELOCITY_CHANGE);
 		GetTransform()->Rotate(0, rot, 0);
 
 		ChangeState(Moving);
@@ -143,11 +143,12 @@ void Player::Update(const SceneContext& sceneContext)
 	{
 		GetTransform()->Translate(GetTransform()->GetPosition());
 
+
 		ChangeState(Idle);
 	}
 
 	// bomb
-	if (sceneContext.pInput->IsActionTriggered(UniqueInputID(m_player, DropBomb)))
+	if (sceneContext.pInput->IsActionTriggered(UniqueInputID(m_Player, DropBomb)))
 	{
 		// we cannot make
 		if (!m_pBomb->IsActive())
@@ -163,4 +164,14 @@ void Player::ChangeState(PlayerState state)
 	m_State = state;
 	m_pAnimator->SetAnimation(state);
 	m_pAnimator->Play();
+}
+
+void Player::PlayerDied(float dT)
+{
+	m_TimerBeforeDespawn += dT;
+	if (m_DespawnTime < m_TimerBeforeDespawn)
+		m_pAnimator->Pause();
+
+	GetTransform()->Translate(GetTransform()->GetPosition());
+	m_pRigid->SetCollisionGroup(CollisionGroup::Group6);
 }

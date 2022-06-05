@@ -27,6 +27,7 @@ public:
 
 	void AddInput(const SceneContext& sc, InputIds input, UINT virtualKey);
 
+	bool IsDead() const { return m_State == Dead ? true : false; }
 	void Kill();
 
 protected:
@@ -40,14 +41,17 @@ private:
 	RigidBodyComponent* m_pRigid = nullptr;
 	ModelAnimator* m_pAnimator{};
 	float m_MoveSpeed = 0.1f;
-	int m_player = 0;
+	float m_TimerBeforeDespawn = 0.f;
+	float m_DespawnTime = 2.f;
+	int m_Player = 0;
 
 	Text* m_pScoreBoard = nullptr;
 	PlayerState m_State = Moving; // default to the first animation
 
-	XMFLOAT3 m_Color = { 1.f, 0.f, 0.f };
+	XMFLOAT4 m_Color = { 1.f, 0.f, 0.f, 1.f };
 
 
 	void ChangeState(PlayerState state);
+	void PlayerDied(float dT);
 };
 

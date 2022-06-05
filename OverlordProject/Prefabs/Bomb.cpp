@@ -41,7 +41,7 @@ void Bomb::Activate(const XMFLOAT3& pos)
 GameObject* RaycastExplosion(PhysxProxy* pPhysxProx, const PxVec3& pos, const PxVec3& dir, PxRaycastHit& info, std::vector<Player*>& pPlayer)
 {
 	PxQueryFilterData filterData;
-	filterData.data.word0 = ~static_cast<PxU32>(CollisionGroup::Group1 | CollisionGroup::Group9);
+	filterData.data.word0 = ~static_cast<PxU32>(CollisionGroup::Group1 | CollisionGroup::Group6 | CollisionGroup::Group9);
 
 	PxRaycastBuffer hit;
 	if (pPhysxProx->Raycast(pos, dir, 200.f, hit, PxHitFlag::eDEFAULT, filterData))
