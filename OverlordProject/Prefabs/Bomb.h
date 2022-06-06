@@ -26,7 +26,6 @@ private:
 	float m_Duration = 4.f;
 
 	FMOD::Sound* m_pExplosionEffect = nullptr;
-
 	Player* m_pPlayer = nullptr;
 };
 

@@ -2,6 +2,7 @@
 #include "ProjectScene.h"
 
 
+#include "Components/ScreenShakeComponent.h"
 #include "Prefabs/Player.h"
 #include "Prefabs/Text.h"
 
@@ -42,6 +43,7 @@ void ProjectScene::Initialize()
 	m_pCamera = AddChild(new FixedCamera());
 	m_pCamera->GetTransform()->Translate(0, 42, -8);
 	m_pCamera->GetTransform()->Rotate(80, 0, 0);
+	m_pCamera->AddComponent(new ScreenShakeComponent());
 	SetActiveCamera(m_pCamera->GetComponent<CameraComponent>());
 	
 	m_pEndGameScreen = AddChild(new Text({ m_SceneContext.windowWidth / 2, m_SceneContext.windowHeight / 2 }, { 0.f, 0.f }, center));

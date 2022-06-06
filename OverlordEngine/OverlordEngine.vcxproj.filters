@@ -56,6 +56,7 @@
     <ClCompile Include="Misc\ShadowMapMaterial.cpp" />
     <ClCompile Include="Components\BombEffectComponent.cpp" />
     <ClCompile Include="Misc\ExplosionMaterial.cpp" />
+    <ClCompile Include="Components\ScreenShakeComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -123,5 +124,6 @@
     <ClInclude Include="Misc\ShadowMapMaterial.h" />
     <ClInclude Include="Components\BombEffectComponent.h" />
     <ClInclude Include="Misc\ExplosionMaterial.h" />
+    <ClInclude Include="Components\ScreenShakeComponent.h" />
   </ItemGroup>
 </Project>

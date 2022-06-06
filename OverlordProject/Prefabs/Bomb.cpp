@@ -3,6 +3,7 @@
 
 #include "Player.h"
 #include "Components/BombEffectComponent.h"
+#include "Components/ScreenShakeComponent.h"
 #include "Materials/DiffuseMaterial.h"
 #include "Scenes/Project/ProjectScene.h"
 
@@ -171,6 +172,7 @@ void Bomb::Update(const SceneContext& sc)
 
 			m_pBombEffect->ActivateEffect(bombExplosion);
 			SoundManager::Get()->GetSystem()->playSound(m_pExplosionEffect, nullptr, false, nullptr);
+			sc.pCamera->GetGameObject()->GetComponent<ScreenShakeComponent>()->Shake(0.1f, 0.25f);
 			m_Exploded = true;
 		}
 	}
