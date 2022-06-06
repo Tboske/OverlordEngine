@@ -11,7 +11,7 @@
 
 ProjectScene::~ProjectScene()
 {
-	
+
 }
 
 
@@ -25,8 +25,19 @@ void ProjectScene::Initialize()
 #endif
 
 
-	const auto pPhysxMaterial = PxGetPhysics().createMaterial(0.5f, 0.5f, 0.0f);
+	static FMOD::Sound* pSound = nullptr;
+	if (!pSound)
+	{
+		SoundManager::Get()->GetSystem()->createStream("Resources/Sounds/BackgroundMusic.wav", FMOD_DEFAULT, nullptr, &pSound);
+		pSound->setMode(FMOD_LOOP_NORMAL);
+		pSound->set3DMinMaxDistance(0.f, 100.f);
+	}
+	SoundManager::Get()->GetSystem()->playSound(pSound, nullptr, true, &m_pBackgroundMusic);
+	m_pBackgroundMusic->setVolume(0.4f);
+	
 
+
+	const auto pPhysxMaterial = PxGetPhysics().createMaterial(0.5f, 0.5f, 0.0f);
 
 	m_pCamera = AddChild(new FixedCamera());
 	m_pCamera->GetTransform()->Translate(0, 42, -8);
@@ -118,6 +129,24 @@ void ProjectScene::Draw()
 	
 }
 
+void ProjectScene::OnSceneActivated()
+{
+	bool isPaused{};
+	m_pBackgroundMusic->getPaused(&isPaused);
+
+	if (isPaused)
+		m_pBackgroundMusic->setPaused(false);
+}
+
+void ProjectScene::OnSceneDeactivated()
+{
+	bool isPaused{};
+	m_pBackgroundMusic->getPaused(&isPaused);
+
+	if (!isPaused)
+		m_pBackgroundMusic->setPaused(true);
+}
+
 void ProjectScene::OnGUI()
 {
 	m_pFloorMaterial->DrawImGui();
@@ -137,7 +166,6 @@ void ProjectScene::InitArena(PxMaterial* physxMat)
 	m_pFloorMaterial->SetVariable_Scalar(L"gFlipGreenChannel", true);
 
 	m_pArena = AddChild(new GameObject());
-
 	auto pFloor = m_pArena->AddChild(new GameObject());
 	{
 		auto* pModelComp = pFloor->AddComponent(new ModelComponent(L"Meshes/Project/Floor.ovm"));

@@ -170,6 +170,7 @@ void Bomb::Update(const SceneContext& sc)
 				player->Kill();
 
 			m_pBombEffect->ActivateEffect(bombExplosion);
+			SoundManager::Get()->GetSystem()->playSound(m_pExplosionEffect, nullptr, false, nullptr);
 			m_Exploded = true;
 		}
 	}
@@ -179,5 +180,7 @@ void Bomb::Initialize(const SceneContext&)
 {
 	m_pBombEffect = AddComponent(new BombEffectComponent(L"Textures/FireBall.png"));
 
+
+	SoundManager::Get()->GetSystem()->createStream("Resources/Sounds/Explosion.wav", FMOD_DEFAULT, nullptr, &m_pExplosionEffect);
 }
 

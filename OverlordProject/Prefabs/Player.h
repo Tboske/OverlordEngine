@@ -50,6 +50,7 @@ private:
 
 	XMFLOAT4 m_Color = { 1.f, 0.f, 0.f, 1.f };
 
+	FMOD::Sound* m_pDeadSound = nullptr;
 
 	void ChangeState(PlayerState state);
 	void PlayerDied(float dT);

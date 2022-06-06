@@ -48,10 +48,15 @@ void Player::AddInput(const SceneContext& sc, InputIds input, UINT virtualKey)
 void Player::Kill()
 {
 	ChangeState(Dead);
+
+	SoundManager::Get()->GetSystem()->playSound(m_pDeadSound, nullptr, false, nullptr);
 }
 
 void Player::Initialize(const SceneContext&)
 {
+	SoundManager::Get()->GetSystem()->createStream("Resources/Sounds/Death.mp3", FMOD_DEFAULT, nullptr, &m_pDeadSound);
+
+
 	m_pBomb = GetScene()->AddChild(new Bomb(this));
 
 	const auto& sc = GetScene()->GetSceneContext();

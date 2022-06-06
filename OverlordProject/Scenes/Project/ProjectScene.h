@@ -25,6 +25,8 @@ protected:
 	virtual void Initialize() override;
 	virtual void Update() override;
 	virtual void Draw() override;
+	virtual void OnSceneActivated() override;
+	virtual void OnSceneDeactivated() override;
 	virtual void OnGUI() override;
 
 private:
@@ -40,6 +42,8 @@ private:
 	Text* m_pContinueScreen = nullptr;
 	bool m_GameEnded = false;
 
+
+	FMOD::Channel* m_pBackgroundMusic = nullptr;
 	FixedCamera* m_pCamera = nullptr;
 
 	void InitArena(PxMaterial* );
